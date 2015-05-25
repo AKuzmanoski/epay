@@ -60,14 +60,8 @@ public class User extends Entity {
 
 	private void setUserByUsername(String username) throws InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-		Connection conn = getConnection();
-		String sql = "{call getUserByUsername(?)}";
-		CallableStatement st = conn.prepareCall(sql);
-		st.setString("username", username);
-		st.execute();
-		ResultSet resultSet = st.getResultSet();
 		
-//		ResultSet resultSet = getResultSet("SELECT * FROM User WHERE username = " + username);
+    	ResultSet resultSet = getResultSet("SELECT * FROM User WHERE username = '" + username+"'");
 		while(resultSet.next()) {
 //			System.out.println(resultSet.getInt("idUser"));
 			idUser = resultSet.getInt("idUser");
