@@ -1,0 +1,9 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = true
+[remote "origin"]
+	url = https://github.com/AKuzmanoski/epay
+[remote "ep"]
+	url = https://github.com/AKuzmanoski/epay
+	fetch = +refs/heads/*:refs/remotes/ep/*
