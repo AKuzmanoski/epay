@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <html>
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -15,7 +14,7 @@
 	<body>
 		<div id="content" class="content">
 			<h3>Sign Up</h3>
-			<form action="SignupServlet" name="registration" id="registration" method="post">
+			<form action="../RegistrationServlet" name="registration" id="registration" method="post">
 				<div id="personalInfo">
 					<table>
 						<tr>
@@ -97,23 +96,23 @@
 						<tr>
 							<td>Country</td>
 							<td><select id="country" name="country">
-									<option>Macedonia</option>
-									<option>Albania</option>
-									<option>Serbia</option>
-									<option>Montenegro</option>
-									<option>Croatia</option>
-									<option>Bulgaria</option>
+									<option value="Macedonia">Macedonia</option>
+									<option value="Albania">Albania</option>
+									<option value="Serbia">Serbia</option>
+									<option value="Montenegro">Montenegro</option>
+									<option value="Croatia">Croatia</option>
+									<option value="Bulgaria">Bulgaria</option>
 							</select></td>
 						</tr>
 						<tr>
 							<td>City</td>
 							<td><select id="city" name="city">
-									<option>Gostivar</option>
-									<option>Skopje</option>
-									<option>Bitola</option>
-									<option>Kocani</option>
-									<option>Gevgelija</option>
-									<option>Tetovo</option>
+									<option value="Gostivar">Gostivar</option>
+									<option value="Skopje">Skopje</option>
+									<option value="Bitola">Bitola</option>
+									<option value="Kocina">Kocani</option>
+									<option value="Gevgelija">Gevgelija</option>
+									<option value="Tetovo">Tetovo</option>
 							</select></td>
 						</tr>
 						<tr>
