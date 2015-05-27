@@ -29,11 +29,7 @@ public class LoginServlet extends HttpServlet {
 			String username = request.getParameter("username");
 			System.out.println(username);
 			
-			User user = new User(username);
-			
-			if(user == null) {
-				
-			}
+			User user = new User(username, pass);
 			
 			if(user.getPass().equals(pass)) {
 				//succesfull  
