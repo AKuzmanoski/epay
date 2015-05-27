@@ -20,10 +20,9 @@ public class User extends Entity {
 	private String embg;
 //	private double money;
 	
-	public User(long idUser, String userName, String pass, String fullName,
+	public User(String userName, String pass, String fullName,
 			String email, Date dateOfBirth, String address, double money) {
 		super();
-		this.idUser = idUser;
 		this.userName = userName;
 		this.pass = pass;
 		this.fullName = fullName;
@@ -31,6 +30,10 @@ public class User extends Entity {
 		this.dateOfBirth = dateOfBirth;
 		this.address = address;
 //		this.money = money;
+	}
+	
+	public boolean validUser() {
+		return true;
 	}
 
 	public User(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {

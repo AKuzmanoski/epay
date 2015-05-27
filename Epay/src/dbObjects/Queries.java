@@ -42,9 +42,10 @@ public class Queries {
 	 * @throws IOException
 	 */
 	public static void insertNewUser(String username, String password, String fullname,
-		String email, String contact, Date dateOfBirth, String address, boolean isIndividual, String embg) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		String email, String contact, Date dateOfBirth, String address, boolean isIndividual, String embg,
+		String cardnum) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
 		st.setString("password", password);
@@ -55,6 +56,7 @@ public class Queries {
 		st.setString("address", address);
 		st.setBoolean("isindividual", isIndividual);
 		st.setString("embg", embg);
+		st.setString("cardnumber", cardnum);
 		st.execute();
 	}
 	
@@ -153,9 +155,6 @@ public class Queries {
 		}
 		return existence == 1;
 	}
-	
-	
-	
 
 	private static Connection getConnection() throws SQLException, InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, IOException {
@@ -170,6 +169,8 @@ public class Queries {
 				"jdbc:mysql://localhost/epayFULL", userDB, pass);
 		return conn;
 	}
+	
+	
 	
 	private static ResultSet getResultSet(String sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		Connection conn = getConnection();

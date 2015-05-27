@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Paycheck extends Entity{
-	   private long idPaycheck;
-	   private long accountFrom;
-	   private long accountTo;
-	   private double amount;
-	   private String description;
-	   private String receiverName;
-	   
-   public Paycheck(long idPaycheck, long accountFrom, long accountTo,
+public class Paycheck extends Entity {
+	private long idPaycheck;
+	private long accountFrom;
+	private long accountTo;
+	private double amount;
+	private String description;
+	private String receiverName;
+
+	public Paycheck(long idPaycheck, long accountFrom, long accountTo,
 			double amount, String description, String receiverName) {
 		super();
 		this.idPaycheck = idPaycheck;
@@ -22,14 +22,21 @@ public class Paycheck extends Entity{
 		this.description = description;
 		this.receiverName = receiverName;
 	}
-   public Paycheck(long idPaycheck) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-	super();
-	this.idPaycheck = idPaycheck;
-	setPaycheckById(idPaycheck);
-}
-private void setPaycheckById(long idPaycheck) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-		ResultSet resultSet = getResultSet("SELECT * FROM paycheck WHERE idpaycheck = " + idPaycheck);
-		while(resultSet.next()) {
+
+	public Paycheck(long idPaycheck) throws InstantiationException,
+			IllegalAccessException, ClassNotFoundException, SQLException,
+			IOException {
+		super();
+		this.idPaycheck = idPaycheck;
+		setPaycheckById(idPaycheck);
+	}
+
+	private void setPaycheckById(long idPaycheck) throws SQLException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException, IOException {
+		ResultSet resultSet = getResultSet("SELECT * FROM paycheck WHERE idpaycheck = "
+				+ idPaycheck);
+		while (resultSet.next()) {
 			System.out.println(resultSet.getLong("idpaycheck"));
 			accountFrom = resultSet.getLong("accountFrom");
 			accountTo = resultSet.getLong("accountTo");
@@ -38,57 +45,53 @@ private void setPaycheckById(long idPaycheck) throws SQLException, Instantiation
 			receiverName = resultSet.getString("receiverName");
 		}
 	}
-	
 
-public long getIdPaycheck() {
-	return idPaycheck;
-}
+	public long getIdPaycheck() {
+		return idPaycheck;
+	}
 
-public void setIdPaycheck(long idPaycheck) {
-	this.idPaycheck = idPaycheck;
-}
+	public void setIdPaycheck(long idPaycheck) {
+		this.idPaycheck = idPaycheck;
+	}
 
-public long getAccountFrom() {
-	return accountFrom;
-}
+	public long getAccountFrom() {
+		return accountFrom;
+	}
 
-public void setAccountFrom(long accountFrom) {
-	this.accountFrom = accountFrom;
-}
+	public void setAccountFrom(long accountFrom) {
+		this.accountFrom = accountFrom;
+	}
 
-public long getAccountTo() {
-	return accountTo;
-}
+	public long getAccountTo() {
+		return accountTo;
+	}
 
-public void setAccountTo(long accountTo) {
-	this.accountTo = accountTo;
-}
+	public void setAccountTo(long accountTo) {
+		this.accountTo = accountTo;
+	}
 
-public double getAmount() {
-	return amount;
-}
+	public double getAmount() {
+		return amount;
+	}
 
-public void setAmount(double amount) {
-	this.amount = amount;
-}
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
 
-public String getDescription() {
-	return description;
-}
+	public String getDescription() {
+		return description;
+	}
 
-public void setDescription(String description) {
-	this.description = description;
-}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-public String getReceiverName() {
-	return receiverName;
-}
+	public String getReceiverName() {
+		return receiverName;
+	}
 
-public void setReceiverName(String receiverName) {
-	this.receiverName = receiverName;
-}
+	public void setReceiverName(String receiverName) {
+		this.receiverName = receiverName;
+	}
 
-
-	
-    
 }
