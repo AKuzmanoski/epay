@@ -1,7 +1,13 @@
+	
+	
 package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +21,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.DateFormatter;
+
+import dbObjects.Queries;
 
 /**
  * Servlet implementation class RegistrationServlet
@@ -87,16 +95,31 @@ public class RegistrationServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		pw.println(userName);
-		pw.println(accountNumber);
-		pw.println(password);
-		pw.println(fullName);
-		pw.println(socialSecurity);
-		pw.println(email);
-		pw.println(contactNumber);
-		pw.println(address);
-		pw.println(bank);
-		pw.println(dateFrom);
-		pw.println(dateTo);
+		// Queries
+		try {
+			if (!Queries.isUsernameFree(userName)) {
+				request.setAttribute("ErrorMessage", "The username is alredy taken by another user.");
+				request.getRequestDispatcher("Registration/NotRegistrated.jsp").forward(request, response);
+				return;
+			}
+			
+			if (!Queries.isAccountFree(accountNumber)) {
+				Queries.insertNewAccount(accountNumber, new java.sql.Date(dateFrom.getTime()), new java.sql.Date(dateTo.getTime()));
+			}
+			
+			if (!Queries.isAccountNotInOwnership(accountNumber)) {
+				request.setAttribute("ErrorMessage", "The Accaunt Number you entered is used by another user.");
+				request.getRequestDispatcher("Registration/NotRegistrated.jsp").forward(request, response);
+				return;
+			}
+			
+			Queries.insertNewUser(userName, password, fullName, email, contactNumber, new java.sql.Date(dateOfBirth.getTime()), address, isIndividual.equals("individual"), socialSecurity, accountNumber);
+			
+			// LoginToHome 
+			response.sendRedirect("LoginToHome");
+			
+		} catch (Exception ex) {
+			pw.println("SQL Database problem");
+		}
 	}
 }

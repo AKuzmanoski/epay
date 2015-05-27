@@ -59,8 +59,37 @@ public class Queries {
 		st.setString("cardnumber", cardnum);
 		st.execute();
 	}
+
 	
 	/**
+	 * Checks whether the Account has linked User.
+	 * 
+	 * @param cardnumber
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static boolean isAccountNotInOwnership(String cardnumber)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call checkAccountOwnership(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setString("cardnum", cardnumber);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		int existence = 0;
+		while (resultSet.next()) {
+			existence = resultSet.getInt("cnt");
+		}
+		return existence == 0;
+	}
+	
+	
+	/*
 	 * inserting new account, datefrom is set to now() in case it is null,
 	 * 						  dateto is set to datefrom + 30 days in case it was nul
 	 * @param cardnum
