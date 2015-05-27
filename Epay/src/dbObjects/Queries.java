@@ -5,12 +5,58 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Queries {
+	
+//	in username varchar(45),
+//	in password varchar(45),
+//	in fullname varchar(200),
+//	in email varchar(45),
+//	in contact varchar(15),
+//	in dateofbirth datetime,
+//	in address varchar(200),
+//	in isindividual bit,
+//	in embg varchar(25))
+	
+	/**
+	 * Inserts new user, all nullable values should explicitly set as null 
+	 * 					(not a problem, because will be received as null from the text boxes)
+	 * @param username
+	 * @param password
+	 * @param fullname
+	 * @param email
+	 * @param contact
+	 * @param dateOfBirth
+	 * @param address
+	 * @param isIndividual
+	 * @param embg
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static void insertNewUser(String username, String password, String fullname,
+		String email, String contact, Date dateOfBirth, String address, boolean isIndividual, String embg) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setString("username", username);
+		st.setString("password", password);
+		st.setString("fullname", fullname);
+		st.setString("email", email);
+		st.setString("contact", contact);
+		st.setDate("dateofbirth", dateOfBirth);
+		st.setString("address", address);
+		st.setBoolean("isindividual", isIndividual);
+		st.setString("embg", embg);
+		st.execute();
+	}
 
 	/**
 	 * 
