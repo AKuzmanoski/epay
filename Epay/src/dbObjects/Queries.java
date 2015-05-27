@@ -57,6 +57,28 @@ public class Queries {
 		st.setString("embg", embg);
 		st.execute();
 	}
+	
+	/**
+	 * inserting new account, datefrom is set to now() in case it is null,
+	 * 						  dateto is set to datefrom + 30 days in case it was nul
+	 * @param cardnum
+	 * @param datefrom
+	 * @param dateto
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static void insertNewAccount(String cardnum, Date datefrom, Date dateto) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+			Connection conn = getConnection();
+			String sql = "{call insertNewAccount(?, ?, ?)}";
+			CallableStatement st = conn.prepareCall(sql);
+			st.setString("cardnumber", cardnum);
+			st.setDate("datefrom", datefrom);
+			st.setDate("dateto", dateto);
+			st.execute();
+	}
 
 	/**
 	 * 
