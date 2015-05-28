@@ -17,29 +17,12 @@
 
 	<div>
 		<h4>Login</h4>
-		<form action="LoginServlet">
+		<form action="LoginServlet" method="post">
 
 			Please enter your username <input type="text" name="username" /><br>
 
 			Please enter your password <input type="password" name="pass" /> <input
 				type="submit" value="submit">
-
-		</form>
-
-	</div>
-	
-	<div>
-		<h4>Sign up</h4>
-		<form action="SignupServlet" class = "left">
-			Please enter your personal data below:<br>
-			Username: <input type="text" name="usernameSignup"/><br>
-			Password: <input type="password" name="passSignup"/><br>
-			Confirm password: <input type="password" name="confirmPass" /><br>
-			Full name: <input type="text" name="fullName" /><br>
-			Email: <input type="text" name="email" /><br>
-			Birthday: <input type="text" name="dateOfBirth" /><br>
-			Address: <input type="text" name="address" /> <br>
-			<input type="submit" value="submit">
 
 		</form>
 	</div>

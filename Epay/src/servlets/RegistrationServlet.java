@@ -1,26 +1,18 @@
-	
-	
 package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.zip.DataFormatException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.DateFormatter;
 
 import dbObjects.Queries;
 
@@ -94,32 +86,53 @@ public class RegistrationServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// Queries
 		try {
 			if (!Queries.isUsernameFree(userName)) {
-				request.setAttribute("ErrorMessage", "The username is alredy taken by another user.");
-				request.getRequestDispatcher("Registration/NotRegistrated.jsp").forward(request, response);
+				request.setAttribute("ErrorMessage",
+						"The username is alredy taken by another user.");
+				request.getRequestDispatcher("Registration/NotRegistrated.jsp")
+						.forward(request, response);
 				return;
 			}
-			
-			if (!Queries.isAccountFree(accountNumber)) {
-				Queries.insertNewAccount(accountNumber, new java.sql.Date(dateFrom.getTime()), new java.sql.Date(dateTo.getTime()));
+
+			if (Queries.isAccountFree(accountNumber)) {
+				Queries.insertNewAccount(accountNumber, new java.sql.Date(
+						dateFrom.getTime()),
+						new java.sql.Date(dateTo.getTime()));
 			}
-			
+
 			if (!Queries.isAccountNotInOwnership(accountNumber)) {
-				request.setAttribute("ErrorMessage", "The Accaunt Number you entered is used by another user.");
-				request.getRequestDispatcher("Registration/NotRegistrated.jsp").forward(request, response);
+				request.setAttribute("ErrorMessage",
+						"The Accaunt Number you entered is used by another user.");
+				request.getRequestDispatcher("Registration/NotRegistrated.jsp")
+						.forward(request, response);
 				return;
 			}
-			
-			Queries.insertNewUser(userName, password, fullName, email, contactNumber, new java.sql.Date(dateOfBirth.getTime()), address, isIndividual.equals("individual"), socialSecurity, accountNumber);
-			
-			// LoginToHome 
-			response.sendRedirect("LoginToHome");
-			
-		} catch (Exception ex) {
-			pw.println("SQL Database problem");
+
+			Queries.insertNewUser(userName, password, fullName, email,
+					contactNumber, new java.sql.Date(dateOfBirth.getTime()),
+					address, isIndividual.equals("individual"), socialSecurity,
+					accountNumber);
+
+			// LoginToHome
+			request.setAttribute("username", userName);
+			request.setAttribute("password", password);
+			request.getRequestDispatcher("LoginServlet").forward(request,
+					response);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			pw.println(e.getMessage());
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			pw.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			pw.println(e.getMessage());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			pw.println(e.getMessage());
 		}
 	}
 }
