@@ -208,4 +208,68 @@ public class Queries {
 		return newId;
 	}
 
+	/**
+	 * 
+	 * @param invoiceid
+	 * @param paycheckid
+	 * @return id of the newly inserted invoice_paycheck
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static long insertNewInvoicePaycheck(long invoiceid, long paycheckid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewInvoicePaycheck(?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("invoiceid", invoiceid);
+		st.setLong("paycheckid", paycheckid);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		return newId;
+	}
+	
+	/**
+	 * deletes the document with the specified docId
+	 * @param docId
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static void deleteDocument(long docId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call deleteDocument(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("docId", docId);
+		st.execute();
+	}
+	
+	/**
+	 * updates the URL and Description of the document
+	 * @param docId
+	 * @param newDesc
+	 * @param newUrl
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static void updateDocumentUrlDescription(long docId, String newDesc, String newUrl) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call updateDocumentUrlDescription(?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("docId", docId);
+		st.setString("newDesc", newDesc);
+		st.setString("newUrl", newUrl);
+		st.execute();
+	}
 }
