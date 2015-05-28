@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
 import dbObjects.Invoice;
+import dbObjects.Queries;
 import dbObjects.User;
 
 import java.io.*;
@@ -66,12 +67,16 @@ public class InvoiceServlet extends HttpServlet {
 			request.setAttribute("paychecks", invoice.getPaychecks());
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
+			request.setAttribute("senderAccounts", sender.getAccounts());
+			request.setAttribute("recieverAccounts", sender.getAccounts());
 			request.setAttribute("senderId", sender.getIdUser());
 			request.setAttribute("senderName", sender.getFullName());
 			request.setAttribute("senderAccount", sourceAccount);
 			request.setAttribute("recieverID", reciever.getIdUser());
 			request.setAttribute("recieverName", reciever.getFullName());
 			request.setAttribute("recieverAccount", destinationAccount);
+			
+			request.getRequestDispatcher("Invoice/Invoice.jsp").forward(request, response);;
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,6 +94,8 @@ public class InvoiceServlet extends HttpServlet {
 
 	private Invoice getInvoice(HttpServletRequest request) {
 		Long invoiceID = Long.parseLong(request.getParameter("invoiceid"));
+		if (invoiceID == null)
+			invoiceID = Long.parseLong(request.getAttribute("invoiceid").toString());
 		Long destinationUser = null;
 		Long sourceUser = null;
 		if (invoiceID == null) {
@@ -97,6 +104,24 @@ public class InvoiceServlet extends HttpServlet {
 					.toString());
 			destinationUser = Long.parseLong(request.getAttribute(
 					"destinationUser").toString());
+			try {
+				invoiceID = Queries.insertNewInvoice(sourceUser, destinationUser);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new Invoice(invoiceID, sourceUser, destinationUser);
 		} else {
 			return new Invoice(invoiceID, sourceUser, destinationUser);

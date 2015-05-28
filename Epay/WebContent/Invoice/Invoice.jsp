@@ -1,5 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="dbObjects.User"%>
+<%@page import="dbObjects.Paycheck"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" 
+       uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,6 +20,18 @@
 </head>
 <body>
 	<div id="content1" class="content">
+		<div id="invoiceHeader">
+			<table>
+				<tr>
+					<td>Issuer</td>
+					<td>$(senderName)</td>
+				</tr>
+				<tr>
+					<td>Reciever</td>
+					<td>$(recieverName)</td>
+				</tr>
+			</table>
+		</div>
 		<div id="files" class="panel">
 			<h3>Add document:</h3>
 			<form id="documentForm" action="../InvoiceServlet" method="post"
