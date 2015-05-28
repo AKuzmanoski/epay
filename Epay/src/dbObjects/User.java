@@ -185,6 +185,35 @@ public class User extends Entity {
 		return accounts;
 	}
 	
+	/**
+	 * 
+	 * @return list of all accounts for the user
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public List<Account> getCompleteAccounts() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Account> accounts = new ArrayList<Account>();
+		
+		Connection conn = getConnection();
+		String sql = "{call getAccountsByUserId(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("userid", idUser);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		
+		while(resultSet.next()) {
+			accounts.add(new Account(resultSet.getLong("accountId"), resultSet.getString("cardnumber")
+					, resultSet.getDate("datefrom"), resultSet.getDate("dateto")));
+		}
+		
+		return accounts;
+	}
+	
+	
 	
 	
 	@Override

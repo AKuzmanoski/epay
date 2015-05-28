@@ -20,6 +20,18 @@ public class Account extends Entity {
 		setParams(cardNumber);
 	}
 	
+	
+	
+	public Account(long accountId, String cardNumber, Date dateFrom, Date dateTo) {
+		super();
+		this.accountId = accountId;
+		this.cardNumber = cardNumber;
+		this.dateFrom = dateFrom;
+		this.dateTo = dateTo;
+	}
+
+
+
 	public void setParams(String cardnumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
 		String sql = "{call getAccountByCardnumber(?)}";
