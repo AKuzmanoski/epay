@@ -20,7 +20,10 @@ public class Account extends Entity {
 		setParams(cardNumber);
 	}
 	
-	
+	public Account(long id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		this.accountId = id;
+		setParamsById(id);
+	}
 	
 	public Account(long accountId, String cardNumber, Date dateFrom, Date dateTo) {
 		super();
@@ -30,7 +33,20 @@ public class Account extends Entity {
 		this.dateTo = dateTo;
 	}
 
-
+	public void setParamsById(long id) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getAccountById(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", id);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			cardNumber = resultSet.getString("cardnumber");
+			dateFrom = resultSet.getDate("dateFrom");
+			dateTo = resultSet.getDate("dateto");
+		}
+	}
 
 	public void setParams(String cardnumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
