@@ -20,7 +20,10 @@ public class Account extends Entity {
 		setParams(cardNumber);
 	}
 	
-	
+	public Account(long id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		this.accountId = id;
+		setParamsById(id);
+	}
 	
 	public Account(long accountId, String cardNumber, Date dateFrom, Date dateTo) {
 		super();
@@ -30,7 +33,20 @@ public class Account extends Entity {
 		this.dateTo = dateTo;
 	}
 
-
+	public void setParamsById(long id) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getAccountById(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", id);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			cardNumber = resultSet.getString("cardnumber");
+			dateFrom = resultSet.getDate("dateFrom");
+			dateTo = resultSet.getDate("dateto");
+		}
+	}
 
 	public void setParams(String cardnumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
@@ -58,7 +74,7 @@ public class Account extends Entity {
 	 */
 	public List<Paycheck> getSentPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call getPaychecksById(?)}";
+		String sql = "{call paidPaychecks(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("accountid", accountId);
 		st.execute();
@@ -102,10 +118,72 @@ public class Account extends Entity {
 		
 		return paychecks;
 	}
+	
+	/**
+	 * 
+	 * @param accountTo
+	 * @param amount
+	 * @param description
+	 * @param receiverName
+	 * @return true if the paying has been successful, false if not succesful (the limit would be crossed)
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public boolean tryToPay(long accountTo, double amount, String description, String receiverName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call paying(?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accFrom", accountId);
+		st.setLong("accTo", accountTo);
+		st.setDouble("amount", amount);
+		st.setString("description", description);
+		st.setString("receiverName", receiverName);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		resultSet.next();
+		return resultSet.getInt("isSuccesful") == 1;
+	}
 
 	@Override
 	public String toString() {
 		return accountId + "\t" + cardNumber + "\t" + dateFrom + "\t" + dateTo;
 	}
+
+	public long getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
+	public Date getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(Date dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public Date getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(Date dateTo) {
+		this.dateTo = dateTo;
+	}
+	
+	
 	
 }

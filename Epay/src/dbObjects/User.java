@@ -44,15 +44,24 @@ public class User extends Entity {
 	
 	
 	private void setUserById(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-		ResultSet resultSet = getResultSet("SELECT * FROM User WHERE idUser = " + idUser);
+		Connection conn = getConnection();
+		String sql = "{call getUserById(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", idUser);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
 		while(resultSet.next()) {
-			System.out.println(resultSet.getInt("idUser"));
 			userName = resultSet.getString("username");
-			pass = resultSet.getString("pass");
-			fullName = resultSet.getString("fullname");
+			pass = resultSet.getString("password");
+			fullName = resultSet.getString("fullName");
 			email = resultSet.getString("email");
+			contact = resultSet.getString("contact");
 			dateOfBirth = resultSet.getDate("dateOfBirth");
 			address = resultSet.getString("address");
+			isIndividual = resultSet.getBoolean("isIndividual");
+			embg = resultSet.getString("embg");
+			
 //			money = resultSet.getDouble("money");
 		}
 	}
