@@ -74,7 +74,7 @@ public class Account extends Entity {
 	 */
 	public List<Paycheck> getSentPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call getPaychecksById(?)}";
+		String sql = "{call paidPaychecks(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("accountid", accountId);
 		st.execute();
