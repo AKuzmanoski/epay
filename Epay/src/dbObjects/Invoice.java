@@ -46,6 +46,27 @@ public class Invoice extends Entity {
 		
 		return documents;
 	}
+	
+	
+	public List<Paycheck> getPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getPaychecksForInvoice(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setInt("idinvoice", (int)idInvoice);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		List<Paycheck> documents = new ArrayList<Paycheck>();
+		
+		while(resultSet.next()) {
+			documents.add(new Paycheck(resultSet.getInt("idpaycheck"), resultSet.getInt("accountFrom"), 
+					resultSet.getInt("accountTo"), resultSet.getDouble("amount"), 
+					resultSet.getString("description"),
+					resultSet.getString("receiverName")));
+		}
+		
+		return documents;
+	}
 
 	public long getIdInvoice() {
 		return idInvoice;
