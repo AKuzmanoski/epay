@@ -13,7 +13,8 @@ public class Entity {
 	protected Connection getConnection() throws SQLException, InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, IOException {
 		// passwords shouldn't be hard-coded into the code, a better practice is to read them from file
-		String passLoc = "/home/goran/dbpass";
+		//String passLoc = "/home/goran/dbpass";
+		String passLoc = "C:/Users/User/Desktop/MyLearningMaterials/TretaGodina/SestiSemestar/SystemSecurity/Proekt/Password.txt";
 		BufferedReader br = new BufferedReader(new FileReader(passLoc));
 		String pass = br.readLine();
 		br.close();
