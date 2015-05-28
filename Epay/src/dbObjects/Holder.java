@@ -26,7 +26,7 @@ public final class Holder {
 	
 	
 	
-	public static ResultSet getResultSet(String sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+	public	 static ResultSet getResultSet(String sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		Connection conn = getConnection();
 		Statement st = conn.createStatement();
 		return st.executeQuery(sql);
