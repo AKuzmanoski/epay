@@ -47,24 +47,60 @@ public class Account extends Entity {
 		}
 	}
 	
-	public List<Paycheck> getPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+	/**
+	 * 
+	 * @return paychecks in which this account was referenced by the accountFrom foreign key
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public List<Paycheck> getSentPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
 		String sql = "{call getPaychecksById(?)}";
 		CallableStatement st = conn.prepareCall(sql);
-		st.setInt("accountid", (int)accountId);
+		st.setLong("accountid", accountId);
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		
-		List<Paycheck> paycheks = new ArrayList<Paycheck>();
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
+
+		while(resultSet.next()) {
+			paychecks.add(new Paycheck(resultSet.getLong("idpaycheck"), resultSet.getLong("accountFrom"),
+					resultSet.getLong("accountTo"), resultSet.getDouble("amount"), 
+					resultSet.getString("description"), resultSet.getString("receiverName")));
+		}
 		
+		return paychecks;
+	}
+	
+	/**
+	 * 
+	 * @return paychecks in which this account was referenced by the accountTo foreign key
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public List<Paycheck> getReceivedPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call receivedPaychecks(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accountid", accountId);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
 		
-////		long idPaycheck, long accountFrom, long accountTo,
-////		double amount, String description, String receiverName
-//		while(resultSet.next()) {
-//			paycheks.add(new Paycheck(resultSet.getLong(""), ))
-//		}
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
+
+		while(resultSet.next()) {
+			paychecks.add(new Paycheck(resultSet.getLong("idpaycheck"), resultSet.getLong("accountFrom"),
+					resultSet.getLong("accountTo"), resultSet.getDouble("amount"), 
+					resultSet.getString("description"), resultSet.getString("receiverName")));
+		}
 		
-		return null;
+		return paychecks;
 	}
 
 	@Override
