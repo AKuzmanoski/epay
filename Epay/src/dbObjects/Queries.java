@@ -153,7 +153,7 @@ public class Queries {
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		int existence = 0;
-		while(resultSet.next()) {
+		while(resultSet.next()) {	
 			existence = resultSet.getInt("cnt");
 		}
 		return existence == 0;

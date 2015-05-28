@@ -5,7 +5,11 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class User extends Entity {
 	private long idUser;
@@ -32,15 +36,12 @@ public class User extends Entity {
 //		this.money = money;
 	}
 	
-	public boolean validUser() {
-		return true;
-	}
-
 	public User(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		super();
 		this.idUser = idUser;
 		setUserById(idUser);
 	}
+	
 	
 	private void setUserById(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		ResultSet resultSet = getResultSet("SELECT * FROM User WHERE idUser = " + idUser);
@@ -57,7 +58,16 @@ public class User extends Entity {
 	}
 	
 	
-	
+	/**
+	 * queries the database and puts sets all the parameters, using the entered username and pass
+	 * @param userName
+	 * @param pass
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	public User(String userName, String pass) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		super();
 		this.userName = userName;
@@ -65,6 +75,16 @@ public class User extends Entity {
 		setUserByUsernameAndPass(userName, pass);
 	}
 
+	/**
+	 * sets all data for the used based on the username and pass entered
+	 * @param username
+	 * @param pass
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	private void setUserByUsernameAndPass(String username, String pass) throws InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
@@ -89,6 +109,16 @@ public class User extends Entity {
 		}
 	}
 	
+	/**
+	 * checks if the usernme is free
+	 * @param username
+	 * @return true for free username, false if username is already taken
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public boolean isUsernameFree(String username) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		Connection conn = getConnection();
 		String sql = "{call checkUserExistence(?)}";
@@ -102,6 +132,89 @@ public class User extends Entity {
 		}
 		return existence == 0;
 	}
+	
+	/**
+	 * 
+	 * @return list of the cardnumbers of all user's accounts
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public List<String> getAccounts() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getAccountsForUser(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setString("username", userName);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		List<String> accounts = new ArrayList<String>();
+		
+		while(resultSet.next()) {
+			accounts.add(resultSet.getString("acc"));
+		}
+		
+		return accounts;
+	}
+	
+	/**
+	 * 
+	 * @return map of all user's pairs accountId -> cardnumber
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public Map<String, String> getAccountsCards() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getAccountsForUser(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setString("username", userName);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		Map<String, String> accounts = new HashMap<String, String>();
+		
+		while(resultSet.next()) {
+			accounts.put(resultSet.getString("acc"), resultSet.getString("card"));
+		}
+		
+		return accounts;
+	}
+	
+	/**
+	 * 
+	 * @return list of all accounts for the user
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public List<Account> getCompleteAccounts() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Account> accounts = new ArrayList<Account>();
+		
+		Connection conn = getConnection();
+		String sql = "{call getAccountsByUserId(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("userid", idUser);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		
+		while(resultSet.next()) {
+			accounts.add(new Account(resultSet.getLong("accountId"), resultSet.getString("cardnumber")
+					, resultSet.getDate("datefrom"), resultSet.getDate("dateto")));
+		}
+		
+		return accounts;
+	}
+	
+	
+	
 	
 	@Override
 	public String toString() {
