@@ -181,6 +181,31 @@ public class Queries {
 		return existence == 1;
 	}
 
-	
+	/**
+	 * 
+	 * @param sender
+	 * @param receiver
+	 * @return id of the newly inserted invoice
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static long insertNewInvoice(long sender, long receiver) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewInvoice(?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("send", sender);
+		st.setLong("rec", receiver);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		return newId;
+	}
 
 }
