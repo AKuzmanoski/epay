@@ -1,0 +1,28 @@
+@CHARSET "ISO-8859-1";
+body {
+	font-family: sans-serif;
+}
+
+#documentForm {
+	width: 40%;
+}
+
+form {
+	width: 100%;
+}
+
+.err {
+	display: none;
+}
+
+table td:first-child {
+	width: 30%;
+}
+
+input {
+	width: 70%;
+}
+
+textarea {
+	width: 70%;
+}
