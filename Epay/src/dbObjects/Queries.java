@@ -1,15 +1,11 @@
 package dbObjects;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Queries {
 	
@@ -44,7 +40,7 @@ public class Queries {
 	public static void insertNewUser(String username, String password, String fullname,
 		String email, String contact, Date dateOfBirth, String address, boolean isIndividual, String embg,
 		String cardnum) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-		Connection conn = getConnection();
+		Connection conn = Holder.getConnection();
 		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
@@ -75,7 +71,7 @@ public class Queries {
 	public static boolean isAccountNotInOwnership(String cardnumber)
 			throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, SQLException, IOException {
-		Connection conn = getConnection();
+		Connection conn = Holder.getConnection();
 		String sql = "{call checkAccountOwnership(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("cardnum", cardnumber);
@@ -102,7 +98,7 @@ public class Queries {
 	 * @throws IOException
 	 */
 	public static void insertNewAccount(String cardnum, Date datefrom, Date dateto) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-			Connection conn = getConnection();
+			Connection conn = Holder.getConnection();
 			String sql = "{call insertNewAccount(?, ?, ?)}";
 			CallableStatement st = conn.prepareCall(sql);
 			st.setString("cardnumber", cardnum);
@@ -122,7 +118,7 @@ public class Queries {
 	 * @throws IOException
 	 */
 	public static boolean isUsernameFree(String username) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-		Connection conn = getConnection();
+		Connection conn = Holder.getConnection();
 		String sql = "{call checkUserExistence(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
@@ -146,7 +142,7 @@ public class Queries {
 	 * @throws IOException
 	 */
 	public static boolean isAccountFree(String cardnumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-		Connection conn = getConnection();
+		Connection conn = Holder.getConnection();
 		String sql = "{call checkAccountExistence(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("cardnum", cardnumber);
@@ -171,7 +167,7 @@ public class Queries {
 	 * @throws IOException
 	 */
 	public static boolean userAccountMatching(String username, String cardnumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-		Connection conn = getConnection();
+		Connection conn = Holder.getConnection();
 		String sql = "{call userAccountMatching(?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
@@ -185,26 +181,6 @@ public class Queries {
 		return existence == 1;
 	}
 
-	private static Connection getConnection() throws SQLException, InstantiationException, 
-	IllegalAccessException, ClassNotFoundException, IOException {
-		// passwords shouldn't be hard-coded into the code, a better practice is to read them from file
-		String passLoc = "/home/goran/dbpass";
-		BufferedReader br = new BufferedReader(new FileReader(passLoc));
-		String pass = br.readLine();
-		br.close();
-		String userDB = "root";
-		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/epayFULL", userDB, pass);
-		return conn;
-	}
 	
-	
-	
-	private static ResultSet getResultSet(String sql) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-		Connection conn = getConnection();
-		Statement st = conn.createStatement();
-		return st.executeQuery(sql);
-	}
 
 }
