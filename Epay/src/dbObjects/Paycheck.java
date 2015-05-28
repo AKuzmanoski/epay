@@ -45,6 +45,8 @@ public class Paycheck extends Entity {
 			receiverName = resultSet.getString("receiverName");
 		}
 	}
+	
+	
 
 	public long getIdPaycheck() {
 		return idPaycheck;
