@@ -222,6 +222,22 @@ public class User extends Entity {
 		return accounts;
 	}
 	
+	public List<Invoice> getSentInvoices() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Invoice> invoices = new ArrayList<Invoice>();
+		
+		Connection conn = getConnection();
+		String sql = "{call getSentInvoicesByUser(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setInt("iduser", (int)idUser);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			invoices.add(new Invoice(st.getInt("idinvoice"), st.getInt("sender"), st.getInt("receiver")));
+		}
+		
+		return invoices;
+	}
 	
 	
 	
@@ -297,7 +313,7 @@ public class User extends Entity {
 	}
 
 	public boolean isIndividual() {
-		return isIndividual;
+		return isIndividual;	
 	}
 
 	public void setIndividual(boolean isIndividual) {
