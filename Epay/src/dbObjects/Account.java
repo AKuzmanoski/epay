@@ -118,6 +118,34 @@ public class Account extends Entity {
 		
 		return paychecks;
 	}
+	
+	/**
+	 * 
+	 * @param accountTo
+	 * @param amount
+	 * @param description
+	 * @param receiverName
+	 * @return true if the paying has been successful, false if not succesful (the limit would be crossed)
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public boolean tryToPay(long accountTo, double amount, String description, String receiverName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call paying(?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accFrom", accountId);
+		st.setLong("accTo", accountTo);
+		st.setDouble("amount", amount);
+		st.setString("description", description);
+		st.setString("receiverName", receiverName);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		resultSet.next();
+		return resultSet.getInt("isSuccesful") == 1;
+	}
 
 	@Override
 	public String toString() {
