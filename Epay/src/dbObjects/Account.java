@@ -14,6 +14,9 @@ public class Account extends Entity {
 	private String cardNumber;
 	private Date dateFrom;
 	private Date dateTo;
+	private double balance;
+	private double limit;
+	private String bank;
 	
 	public Account(String cardNumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		this.cardNumber = cardNumber;
