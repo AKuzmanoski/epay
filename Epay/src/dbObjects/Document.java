@@ -1,5 +1,11 @@
 package dbObjects;
 
+import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Document {
 	private long idDocument;
 	private long invoice;
@@ -15,6 +21,27 @@ public class Document {
 		this.title = title;
 		this.description = description;
 		this.url = url;
+	}
+	
+	public Document(long idDoc) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		setParamsById(idDoc);
+	}
+	
+	public void setParamsById(long idDoc) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call getDocumentById(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", idDoc);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			idDocument = resultSet.getLong("idDocuments");
+			invoice = resultSet.getLong("invoice");
+			title = resultSet.getString("title");
+			description = resultSet.getString("description");
+			url = resultSet.getString("url");
+		}
 	}
 
 	public long getIdDocument() {
@@ -57,5 +84,9 @@ public class Document {
 		this.url = url;
 	}
 	
+	@Override
+	public String toString() {
+		return idDocument + "\t" + invoice + "\t" + title + "\t" + description + "\t" + url;
+	}
 	
 }

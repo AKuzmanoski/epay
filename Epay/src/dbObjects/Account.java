@@ -155,6 +155,20 @@ public class Account extends Entity {
 		resultSet.next();
 		return resultSet.getInt("isSuccesful") == 1;
 	}
+	
+	public User accountOwner() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getAccountOwner(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accountId", accountId);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		rs.next();
+		return new User(rs.getLong("iduser"), rs.getString("username"), rs.getString("password"),
+				rs.getString("fullname"), rs.getString("email"), rs.getString("contact"),
+				rs.getDate("dateOfBirth"), rs.getString("address"), rs.getBoolean("isindividual"), 
+				rs.getString("embg"));
+	}
 
 	@Override
 	public String toString() {
