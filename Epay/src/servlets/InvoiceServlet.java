@@ -74,7 +74,7 @@ public class InvoiceServlet extends HttpServlet {
 			destinationAccount = request
 					.getParameter("destinationAccount");
 		}
-
+		System.out.println(invoice);
 		try {
 			request.setAttribute("documents", invoice.getDocuments());
 			request.setAttribute("paychecks", invoice.getPaychecks());
