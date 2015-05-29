@@ -20,6 +20,12 @@ public class Invoice extends Entity {
 		this.receiver = receiver;
 	}
 	
+	public Invoice(long idInvoice) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		super();
+		this.idInvoice = idInvoice;
+		setInvoiceById(idInvoice);
+	}
+	
 	/**
 	 * 
 	 * @return documents attached to this Invoice
@@ -45,6 +51,20 @@ public class Invoice extends Entity {
 		}
 		
 		return documents;
+	}
+	
+	private void setInvoiceById(long idInvoice) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		Connection conn = getConnection();
+		String sql = "{call getInvoiceById(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", idInvoice);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			sender = resultSet.getLong("sender");
+			receiver = resultSet.getLong("receiver");
+		}
 	}
 	
 	
