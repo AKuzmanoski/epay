@@ -16,6 +16,14 @@ $(document).ready(function() {
 	$("#file").blur(function() {
 		validateNonEmpty($(this));
 	});
+	
+	$( "#listBills" ).selectable({
+		  selected: function( event, ui ) {
+			  $("#paycheckSelected").val($(".ui-selected").attr("id"));
+			  $("#typeOfItem").val($(".ui-selected").attr("type"));
+            $("#list").submit();
+		  }
+	});
 });
 
 function validateDocumentForm() {

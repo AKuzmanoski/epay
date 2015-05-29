@@ -14,6 +14,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
+import dbObjects.Account;
+import dbObjects.Document;
 import dbObjects.Invoice;
 import dbObjects.Queries;
 import dbObjects.User;
@@ -66,12 +68,13 @@ public class InvoiceServlet extends HttpServlet {
 	private void setAttributes(HttpServletRequest request, Invoice invoice) {
 		System.out.println(invoice);
 		try {
+			Account account;
 			request.setAttribute("documents", invoice.getDocuments());
 			request.setAttribute("paychecks", invoice.getPaychecks());
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
-			request.setAttribute("senderAccounts", sender.getAccountsCards());
-			request.setAttribute("recieverAccounts", reciever.getAccountsCards());
+			request.setAttribute("senderAccounts", sender.getAccounts());
+			request.setAttribute("recieverAccounts", reciever.getAccounts());
 			request.setAttribute("senderId", sender.getIdUser());
 			request.setAttribute("senderName", sender.getFullName());
 			request.setAttribute("recieverID", reciever.getIdUser());
