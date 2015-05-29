@@ -233,7 +233,26 @@ public class User extends Entity {
 		ResultSet resultSet = st.getResultSet();
 		
 		while(resultSet.next()) {
-			invoices.add(new Invoice(st.getInt("idinvoice"), st.getInt("sender"), st.getInt("receiver")));
+			invoices.add(new Invoice(resultSet.getInt("idinvoice"), resultSet.getInt("sender"), 
+					resultSet.getInt("receiver")));
+		}
+		
+		return invoices;
+	}
+	
+	public List<Invoice> getReceivedInvoices() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Invoice> invoices = new ArrayList<Invoice>();
+		
+		Connection conn = getConnection();
+		String sql = "{call getReceivedInvoicesByUser(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setInt("iduser", (int)idUser);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			invoices.add(new Invoice(resultSet.getInt("idinvoice"), resultSet.getInt("sender"), 
+					resultSet.getInt("receiver")));
 		}
 		
 		return invoices;
