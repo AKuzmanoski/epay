@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Queries {
 	
@@ -271,5 +273,25 @@ public class Queries {
 		st.setString("newDesc", newDesc);
 		st.setString("newUrl", newUrl);
 		st.execute();
+	}
+	
+	public static List<User> getAllUsers() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<User> allUsers = new ArrayList<User>();
+		
+		Connection conn = Holder.getConnection();
+		String sql = "{call getAllUsers()}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
+		while(resultSet.next()) {
+			allUsers.add(new User(resultSet.getLong("iduser"), resultSet.getString("username"),
+					resultSet.getString("password"), resultSet.getString("fullname"),
+					resultSet.getString("email"), resultSet.getString("contact"),
+					resultSet.getDate("dateofbirth"), resultSet.getString("address"), 
+					resultSet.getBoolean("isindividual"), resultSet.getString("embg")));
+		}
+		
+		return allUsers;
 	}
 }

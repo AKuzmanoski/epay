@@ -24,17 +24,7 @@ public class User extends Entity {
 	private String embg;
 //	private double money;
 	
-	public User(String userName, String pass, String fullName,
-			String email, Date dateOfBirth, String address, double money) {
-		super();
-		this.userName = userName;
-		this.pass = pass;
-		this.fullName = fullName;
-		this.email = email;
-		this.dateOfBirth = dateOfBirth;
-		this.address = address;
-//		this.money = money;
-	}
+	
 	
 	public User(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		super();
@@ -43,6 +33,23 @@ public class User extends Entity {
 	}
 	
 	
+	public User(long idUser, String userName, String pass, String fullName,
+		String email, String contact, Date dateOfBirth, String address,
+		boolean isIndividual, String embg) {
+	super();
+	this.idUser = idUser;
+	this.userName = userName;
+	this.pass = pass;
+	this.fullName = fullName;
+	this.email = email;
+	this.contact = contact;
+	this.dateOfBirth = dateOfBirth;
+	this.address = address;
+	this.isIndividual = isIndividual;
+	this.embg = embg;
+}
+
+
 	private void setUserById(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		Connection conn = getConnection();
 		String sql = "{call getUserById(?)}";
@@ -258,13 +265,6 @@ public class User extends Entity {
 		return invoices;
 	}
 	
-//	public List<Invoice> sendInvoices() {
-//		
-//	}
-//	
-//	public List<Invoice> receiveInvoices() {
-//		
-//	}
 //	
 //	public List<Paycheck> sendPaychecks() {
 //		
