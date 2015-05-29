@@ -239,6 +239,21 @@ public class User extends Entity {
 		return invoices;
 	}
 	
+//	public List<Invoice> sendInvoices() {
+//		
+//	}
+//	
+//	public List<Invoice> receiveInvoices() {
+//		
+//	}
+//	
+//	public List<Paycheck> sendPaychecks() {
+//		
+//	}
+//	
+//	public List<Paycheck> receiveInvoices() {
+//		
+//	}
 	
 	
 	@Override
