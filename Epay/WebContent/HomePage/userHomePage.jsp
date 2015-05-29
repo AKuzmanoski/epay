@@ -10,12 +10,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Home page</title>
-    <link type="text/css" rel="stylesheet" href="../jQuery/jquery-ui.min.css"></link>
+    <link type="text/css" rel="stylesheet" href="jQuery/jquery-ui.min.css"></link>
     	
-	<script type="text/javascript" src="../jQuery/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="../jQuery/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="HomePage.js"></script>
-
+	<script type="text/javascript" src="jQuery/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="jQuery/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="HomePage/HomePage.js"></script>
+     
+     <style>
+  #feedback { font-size: 1.4em; }
+  #listBills .ui-selecting { background: #FECA40; }
+  #listBills .ui-selected { background: #F39814; color: white; }
+  #listBills { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  #listBills li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+  </style>
 </head>
 <body>
 	
@@ -23,7 +30,7 @@
 	    User <c:out value="${user.fullName}"></c:out>
 	    <br/>
 	    Select your account:
-	    <form id="dropdownform" action="../LoginToHomeServlet" method="post">
+	    <form id="dropdownform" action="LoginToHomeServlet" method="post">
 	    <select id="dropdown" name="dropdown">
 	      	<c:forEach var="entry" items="${accounts}">
   				<option value="${entry.key}">${entry.value}</option>
@@ -37,14 +44,18 @@
     			<li><a href="#tabs-3">New Invoice</a></li>
   			</ul>
   		<div id="tabs-1">
+  		<form id="list" action="PaidPaycheckServlet" method="post">
+  		   <input id="paycheckSelected" type="hidden" name="paycheckSelected" />
+  		   <input id="typeOfItem" type="hidden" name="typeOfItem"/>
   		   <ul id="listBills">
   		     <c:forEach items="${sentPaychecks}" var="entry">
-				<li value=${entry.idPaycheck} type="sentP">-&gt${entry.description}</li>		
+				<li class="ui-widget-content" id="${entry.idPaycheck}" type="paycheckSent">-&gt${entry.description}</li>		
 				</c:forEach>
 			 <c:forEach items="${receivedPaychecks}" var="entry">
-				<li value=${entry.idPaycheck} type="receivedP">&lt-${entry.description}</li>		
+				<li class="ui-widget-content" id="${entry.idPaycheck}" type="paycheckReceived">&lt-${entry.description}</li>		
 				</c:forEach>
   		   </ul>
+  		</form>
         </div>
        	<div id="tabs-2">
       	</div>

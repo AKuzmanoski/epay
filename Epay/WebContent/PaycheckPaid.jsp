@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib prefix="c" 
+       uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -52,17 +54,17 @@ margin-right:10px;
 		    <br/><br/>
 		    <h3> Applicant</h3>
 			<label>Applicant name</label>
-			<input type=text name="applicantName" readonly>
+			<input type=text name="applicantName" value="<c:out value="${user.fullName}"></c:out>" readonly>
 			<label>Applicant address</label>
-			<input type=text name="applicantAddress" readonly>
+			<input type=text name="applicantAddress" value="<c:out value="${user.address}"/>" readonly>
 			<label>Applicant bank</label>
 			<input type=text name="applicantBank" readonly>
 			<label>Applicant account</label>
 			<input type=text name="applicantAccount" readonly>
 			<label>Applicant social security</label>
-			<input type=text name="applicantSS" readonly>
+			<input type=text name="applicantSS" value="<c:out value="${user.embg}"/>" readonly>
 			<label>Description</label>
-			<input type=text name="description"readonly>
+			<input type=text name="description" value="<c:out value="${paycheck.description}"/>" readonly>
 		  </div>
 		  <div class='right'>	    
 		    <p>Public revenue</p>
