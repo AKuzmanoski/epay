@@ -39,7 +39,7 @@ public class Invoice extends Entity {
 		Connection conn = getConnection();
 		String sql = "{call getDocumentsForInvoice(?)}";
 		CallableStatement st = conn.prepareCall(sql);
-		st.setLong("invoice", idInvoice);
+		st.setLong("idinvoice", idInvoice);
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		
