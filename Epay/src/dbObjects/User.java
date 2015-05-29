@@ -265,6 +265,42 @@ public class User extends Entity {
 		return invoices;
 	}
 	
+	public List<Paycheck> getSentPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Paycheck> sent = new ArrayList<Paycheck>();
+		
+		Connection conn = getConnection();
+		String sql = "{call getSentPaychecksWithoutInvoice(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setInt("iduser", (int)idUser);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		
+		while(rs.next()) {
+			sent.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"), rs.getLong("accountTo"),
+					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName")));
+		}
+		
+		return sent;
+	}
+	
+	public List<Paycheck> getReceivedPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Paycheck> received = new ArrayList<Paycheck>();
+		
+		Connection conn = getConnection();
+		String sql = "{call getReceivedPaychecksWithoutInvoice(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setInt("iduser", (int)idUser);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		
+		while(rs.next()) {
+			received.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"), rs.getLong("accountTo"),
+					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName")));
+		}
+		
+		return received;
+	}
+	
 //	
 //	public List<Paycheck> sendPaychecks() {
 //		

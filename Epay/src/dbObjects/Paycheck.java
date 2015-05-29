@@ -46,7 +46,10 @@ public class Paycheck extends Entity {
 		}
 	}
 	
-	
+	@Override
+	public String toString() {
+		return idPaycheck + "\t" + accountFrom + "\t" + accountTo + "\t" + amount;
+	}
 
 	public long getIdPaycheck() {
 		return idPaycheck;

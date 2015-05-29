@@ -15,7 +15,7 @@ public class Entity {
 	IllegalAccessException, ClassNotFoundException, IOException {
 		// passwords shouldn't be hard-coded into the code, a better practice is to read them from file
 		Map<String, String> env = System.getenv();
-		String passLoc = env.get("CATALINA_HOME") + "/webapps/data/dbpass";
+		String passLoc = "/home/goran/dbpass";
 		BufferedReader br = new BufferedReader(new FileReader(passLoc));
 		String pass = br.readLine();
 		br.close();
