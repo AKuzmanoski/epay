@@ -36,18 +36,18 @@ public class User extends Entity {
 	public User(long idUser, String userName, String pass, String fullName,
 		String email, String contact, Date dateOfBirth, String address,
 		boolean isIndividual, String embg) {
-	super();
-	this.idUser = idUser;
-	this.userName = userName;
-	this.pass = pass;
-	this.fullName = fullName;
-	this.email = email;
-	this.contact = contact;
-	this.dateOfBirth = dateOfBirth;
-	this.address = address;
-	this.isIndividual = isIndividual;
-	this.embg = embg;
-}
+		super();
+		this.idUser = idUser;
+		this.userName = userName;
+		this.pass = pass;
+		this.fullName = fullName;
+		this.email = email;
+		this.contact = contact;
+		this.dateOfBirth = dateOfBirth;
+		this.address = address;
+		this.isIndividual = isIndividual;
+		this.embg = embg;
+	}
 
 
 	private void setUserById(long idUser) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
