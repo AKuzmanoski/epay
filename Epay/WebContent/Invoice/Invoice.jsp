@@ -19,18 +19,14 @@
 <body>
 	<div id="content1" class="content">
 		<div id="invoiceHeader">
-			Issuer: <b>${senderName}</b>
-			<br />
-			Reciever: <b>${recieverName}</b>
+			Issuer: <b>${senderName}</b> <br /> Reciever: <b>${recieverName}</b>
 		</div>
-		<div id="files" class="panel">
+		<div id="fileUpload" class="panel">
 			<h3>Add document:</h3>
-			<form id="documentForm" action="../InvoiceServlet" method="post"
+			<form id="documentForm" action="InvoiceServlet" method="post"
 				enctype="multipart/form-data">
-				<input type="text" class="viewState" name="sourceAccount"
-					value="${sourceAccount}" /> <input type="text" class="viewState"
-					name="destinationAccount" value="${destinationAccount}" /> <input
-					type="text" class="viewState" name="invoiceid" value="${invoiceid}" />
+				<input type="text" class="viewState" name="invoiceid"
+					value="${invoiceid}" />
 				<table>
 					<tr>
 						<td>File Name</td>
@@ -57,14 +53,16 @@
 		</div>
 
 
-		<div id="paychecks" class="panel">
-			<form id="documentForm" action="../PaycheckServlet" method="post">
+		<div id="paycheckCreate" class="panel">
+			<form id="documentForm" action="PaycheckServlet" method="post">
+				<input type="text" class="viewState" name="invoiceid"
+					value="${invoiceid}" />
 				<table>
 					<tr>
 						<td>${senderName}'saccount</td>
 						<td><select id="senderAccounts" name="senderAccount">
 								<c:forEach var="entry" items="${senderAccounts}">
-									<option value="${entry.key}">${entry.value}</option>
+									<option value="${entry.getAccountId()}">${entry.value}</option>
 								</c:forEach>
 						</select></td>
 					</tr>
@@ -78,9 +76,31 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><input type="submit" id="paycheckSubmit" value="Add New Paycheck" /></td>
+						<td><input type="submit" id="paycheckSubmit"
+							value="Add New Paycheck" /></td>
 					</tr>
 				</table>
+			</form>
+		</div>
+
+		<div id="files" class="panel">
+			<form id="documentForm" action="InvoiceServlet" method="post" target="_blank">
+				<input type="text" class="viewState" name="invoiceid"
+						value="${invoiceid}" />
+				<input type="text" class="viewState" id="document" name="document"
+						value="${invoiceid}" />
+				<input type="text" class="viewState" id="operation" name="operation"
+						value="${invoiceid}" />
+				<ul id="listDocuments">
+					<c:forEach items="${documents}" var="entry">
+						<li id="${entry.getIdDocument()}" class="ui-widget-content" type="paycheckSent">
+							<label class="title">${entry.getTitle()}</label> <br />
+							<label class="description">${entry.getDescription()}</label> <br />
+							<input type="submit" class="download" value="Download" />
+							<input type="submit" class="delete" value="X" />
+						</li>
+					</c:forEach>
+				</ul>
 			</form>
 		</div>
 	</div>

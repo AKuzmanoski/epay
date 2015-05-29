@@ -31,3 +31,12 @@ table td:first-child {
 input, textarea, select {
 	width: 70%;
 }
+
+label.title {
+	text-weight: bold;
+}
+
+label.description {
+	text-decoration: italic;
+	font-size: 0.7em;
+}
