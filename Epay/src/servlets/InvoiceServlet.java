@@ -61,6 +61,10 @@ public class InvoiceServlet extends HttpServlet {
 				.toString());
 		Long destinationAccount = Long.parseLong(request.getAttribute("destinationAccount")
 				.toString());
+		if (sourceAccount == null) {
+			sourceAccount = Long.parseLong(request.getParameter("sourceAccount"));
+			destinationAccount = Long.parseLong(request.getParameter("destinationAccount"));
+		}
 
 		try {
 			request.setAttribute("documents", invoice.getDocuments());
