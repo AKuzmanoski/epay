@@ -3,6 +3,10 @@ body {
 	font-family: sans-serif;
 }
 
+viewState {
+	display: none;
+}
+
 #documentForm {
 	width: 40%;
 }

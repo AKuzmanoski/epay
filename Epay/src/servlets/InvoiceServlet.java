@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +14,12 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
+import dbObjects.Invoice;
+import dbObjects.Queries;
+import dbObjects.User;
+
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -42,79 +48,147 @@ public class InvoiceServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, java.io.IOException {
+
+		Invoice invoice = getInvoice(request);
+
+		// Check that we have a file upload request
+		isMultipart = ServletFileUpload.isMultipartContent(request);
+		if (isMultipart) {
+			uploadFile(request, invoice.getIdInvoice());
+		}
+
+		Long sourceAccount = Long.parseLong(request.getAttribute("sourceAccount")
+				.toString());
+		Long destinationAccount = Long.parseLong(request.getAttribute("destinationAccount")
+				.toString());
+		if (sourceAccount == null) {
+			sourceAccount = Long.parseLong(request.getParameter("sourceAccount"));
+			destinationAccount = Long.parseLong(request.getParameter("destinationAccount"));
+		}
+
+		try {
+			request.setAttribute("documents", invoice.getDocuments());
+			request.setAttribute("paychecks", invoice.getPaychecks());
+			User sender = new User(invoice.getSender());
+			User reciever = new User(invoice.getReceiver());
+			request.setAttribute("senderAccounts", sender.getAccounts());
+			request.setAttribute("recieverAccounts", sender.getAccounts());
+			request.setAttribute("senderId", sender.getIdUser());
+			request.setAttribute("senderName", sender.getFullName());
+			request.setAttribute("senderAccount", sourceAccount);
+			request.setAttribute("recieverID", reciever.getIdUser());
+			request.setAttribute("recieverName", reciever.getFullName());
+			request.setAttribute("recieverAccount", destinationAccount);
+			
+			request.getRequestDispatcher("Invoice/Invoice.jsp").forward(request, response);;
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private Invoice getInvoice(HttpServletRequest request) {
 		Long invoiceID = Long.parseLong(request.getParameter("invoiceid"));
-		Long destinationAccount = null;
+		if (invoiceID == null)
+			invoiceID = Long.parseLong(request.getAttribute("invoiceid").toString());
 		Long destinationUser = null;
-		Long sourceAccount = null;
 		Long sourceUser = null;
 		if (invoiceID == null) {
 			// The invoice is not created, so this is create step
-			sourceUser = Long.parseLong(request.getAttribute("sourceUser").toString());
-			sourceAccount = Long.parseLong(request.getAttribute("sourceAccount").toString());
-			destinationUser = Long.parseLong(request.getAttribute("destinationUser").toString());
-			destinationAccount = Long.parseLong(request.getAttribute("destinationAccount").toString());
-			
-		} else {
-			// Check that we have a file upload request
-			isMultipart = ServletFileUpload.isMultipartContent(request);
-			if (isMultipart) {
-				uploadFile(request, invoiceID);
+			sourceUser = Long.parseLong(request.getAttribute("sourceUser")
+					.toString());
+			destinationUser = Long.parseLong(request.getAttribute(
+					"destinationUser").toString());
+			try {
+				invoiceID = Queries.insertNewInvoice(sourceUser, destinationUser);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			return new Invoice(invoiceID, sourceUser, destinationUser);
+		} else {
+			return new Invoice(invoiceID, sourceUser, destinationUser);
 		}
 	}
-	
+
 	/**
-	 * Uploads file 
+	 * Uploads file
+	 * 
 	 * @param request
 	 */
 	private void uploadFile(HttpServletRequest request, long invoice) {
 		// Check that we have a file upload request
-				
-				DiskFileItemFactory factory = new DiskFileItemFactory();
-				// maximum size that will be stored in memory
-				factory.setSizeThreshold(maxMemSize);
-				// Location to save data that is larger than maxMemSize.
-				factory.setRepository(new File(repoPath));
 
-				// Create a new file upload handler
-				ServletFileUpload upload = new ServletFileUpload(factory);
-				// maximum file size to be uploaded.
-				upload.setSizeMax(maxFileSize);
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		// maximum size that will be stored in memory
+		factory.setSizeThreshold(maxMemSize);
+		// Location to save data that is larger than maxMemSize.
+		factory.setRepository(new File(repoPath));
 
-				try {
-					// Parse the request to get file items.
-					List<FileItem> fileItems = upload.parseRequest(request);
+		// Create a new file upload handler
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		// maximum file size to be uploaded.
+		upload.setSizeMax(maxFileSize);
 
-					// Process the uploaded file items
-					Iterator<FileItem> i = fileItems.iterator();
+		try {
+			// Parse the request to get file items.
+			List<FileItem> fileItems = upload.parseRequest(request);
 
-					while (i.hasNext()) {
-						FileItem fi = (FileItem) i.next();
-						if (!fi.isFormField()) {
-							// Get the uploaded file parameters
-							String fieldName = fi.getFieldName();
-							String fileName = fi.getName();
-							String contentType = fi.getContentType();
-							boolean isInMemory = fi.isInMemory();
-							long sizeInBytes = fi.getSize();
-							// Write the file
-							if (fileName.lastIndexOf("\\") >= 0) {
-								file = new File(
-										filePath + "\\" + invoice
-												+ fileName.substring(fileName
-														.lastIndexOf("\\")));
-							} else {
-								file = new File(
-										filePath + "\\" + invoice 
-												+ fileName.substring(fileName
-														.lastIndexOf("\\") + 1));
-							}
-							fi.write(file);
-						}
+			// Process the uploaded file items
+			Iterator<FileItem> i = fileItems.iterator();
+
+			while (i.hasNext()) {
+				FileItem fi = (FileItem) i.next();
+				if (!fi.isFormField()) {
+					// Get the uploaded file parameters
+					String fieldName = fi.getFieldName();
+					String fileName = fi.getName();
+					String contentType = fi.getContentType();
+					boolean isInMemory = fi.isInMemory();
+					long sizeInBytes = fi.getSize();
+					// Write the file
+					if (fileName.lastIndexOf("\\") >= 0) {
+						file = new File(
+								filePath
+										+ "\\"
+										+ invoice
+										+ fileName.substring(fileName
+												.lastIndexOf("\\")));
+					} else {
+						file = new File(
+								filePath
+										+ "\\"
+										+ invoice
+										+ fileName.substring(fileName
+												.lastIndexOf("\\") + 1));
 					}
-				} catch (Exception ex) {
-					System.out.println(ex);
+					fi.write(file);
 				}
+			}
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)

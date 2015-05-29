@@ -69,18 +69,25 @@ public class LoginServlet extends HttpServlet {
 		try {
 			String username = req.getParameter("username");
 			String pass = req.getParameter("pass");
-			if (username == null);
-			username = (String)req.getAttribute("username");
-			pass = (String)req.getAttribute("password");
-			
+			//if (username == null);
+			//username = (String)req.getAttribute("username");
+			//pass = (String)req.getAttribute("password");
+			//System.out.println(username);
+			//System.out.println(pass);
 			User user = new User(username, pass);
-			
+			//System.out.println("user"+user);
+			//System.out.println("username "+user.getFullName());
 			if(user.getPass().equals(pass)) {
 				//succesfull  
-				resp.addCookie(new Cookie("user", Long.toString(user.getIdUser())));
+				
+				Cookie cookie=new Cookie("user", Long.toString(user.getIdUser()));
+				cookie.setMaxAge(48 * 60 * 60);
+				resp.addCookie(cookie);
+				
 				req.getSession().setAttribute("user", user);
 //				response.sendRedirect("userHomePage.jsp");
-				req.getRequestDispatcher("userHomePage.jsp").forward(req, resp);
+				//System.out.println("added cookie");
+				req.getRequestDispatcher("LoginToHomeServlet").forward(req, resp);
 				//resp.sendRedirect("userHomePage.jsp");
 			}
 			else {
