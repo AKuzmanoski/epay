@@ -1,4 +1,5 @@
 @CHARSET "ISO-8859-1";
+
 body {
 	font-family: sans-serif;
 }
@@ -8,8 +9,41 @@ body {
 }
 
 .panel {
-	width: 40%;
-	border: thin solid black;
+	width: 48%;
+	padding: 10px;
+	display: inline-block;
+	float: left;
+}
+
+.content {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	clear: both;
+	height: auto;
+	border-bottom: thin solid black;
+}
+
+#listDocuments li {
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.info {
+	display: inline-block;
+}
+
+#recieverInfo {
+	float: right;
+}
+
+.lists li {
+	display: block;
+	margin: 10px;
+}
+
+.lists {
+	list-style-type: none;
 }
 
 form {
@@ -28,7 +62,7 @@ table td:first-child {
 	width: 30%;
 }
 
-input, textarea, select {
+.prominent {
 	width: 70%;
 }
 

@@ -2,7 +2,14 @@
  * 
  */
 $(document).ready(function() { 
-	$("input[type=button], input[type=submit]").button();
+	$(".selectable li").button();
+	
+	$(".selectable li").click(function () {
+		$("#paycheckSelected").val($(this).attr("id"));
+		 $("#patcheckListForm").submit();
+	});
+	
+	$("input[type=button].prominent, input[type=submit].prominent").button();
 	$("#documentForm").submit(function( event ) {
 		if (!validateDocumentForm()) {
 			if(event.preventDefault) event.preventDefault(); else event.returnValue = false;
@@ -15,14 +22,6 @@ $(document).ready(function() {
 	
 	$("#file").blur(function() {
 		validateNonEmpty($(this));
-	});
-	
-	$( "#listBills" ).selectable({
-		  selected: function( event, ui ) {
-			  $("#paycheckSelected").val($(".ui-selected").attr("id"));
-			  $("#typeOfItem").val($(".ui-selected").attr("type"));
-            $("#list").submit();
-		  }
 	});
 });
 

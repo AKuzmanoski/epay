@@ -17,6 +17,7 @@ import org.apache.commons.io.output.*;
 import dbObjects.Account;
 import dbObjects.Document;
 import dbObjects.Invoice;
+import dbObjects.Paycheck;
 import dbObjects.Queries;
 import dbObjects.User;
 
@@ -68,17 +69,29 @@ public class InvoiceServlet extends HttpServlet {
 	private void setAttributes(HttpServletRequest request, Invoice invoice) {
 		System.out.println(invoice);
 		try {
-			Account account;
+			List<Paycheck> paychecks = invoice.getPaychecks();
 			request.setAttribute("documents", invoice.getDocuments());
-			request.setAttribute("paychecks", invoice.getPaychecks());
+			request.setAttribute("paychecks", paychecks);
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
-			request.setAttribute("senderAccounts", sender.getAccounts());
-			request.setAttribute("recieverAccounts", reciever.getAccounts());
+			request.setAttribute("senderAccounts", sender.getCompleteAccounts());
+			request.setAttribute("recieverAccounts", reciever.getCompleteAccounts());
 			request.setAttribute("senderId", sender.getIdUser());
 			request.setAttribute("senderName", sender.getFullName());
 			request.setAttribute("recieverID", reciever.getIdUser());
 			request.setAttribute("recieverName", reciever.getFullName());
+			
+			// Additional data
+			request.setAttribute("senderAddress", sender.getAddress());
+			request.setAttribute("senderContact", sender.getContact());
+			request.setAttribute("senderEmail", sender.getEmail());
+			request.setAttribute("recieverAddress", reciever.getAddress());
+			
+			float total = 0F;
+			for (Paycheck pc : paychecks) {
+				total += pc.getAmount();
+			}
+			request.setAttribute("total", total);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
