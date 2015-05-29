@@ -48,6 +48,9 @@ public class Account extends Entity {
 			cardNumber = resultSet.getString("cardnumber");
 			dateFrom = resultSet.getDate("dateFrom");
 			dateTo = resultSet.getDate("dateto");
+			balance = resultSet.getDouble("balance");
+			limit = resultSet.getDouble("limit");
+			bank = resultSet.getString("bank");
 		}
 	}
 
@@ -63,6 +66,9 @@ public class Account extends Entity {
 			accountId = resultSet.getLong("accountId");
 			dateFrom = resultSet.getDate("dateFrom");
 			dateTo = resultSet.getDate("dateto");
+			balance = resultSet.getDouble("balance");
+			limit = resultSet.getDouble("limit");
+			bank = resultSet.getString("bank");
 		}
 	}
 	
