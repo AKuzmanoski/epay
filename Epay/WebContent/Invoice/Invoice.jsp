@@ -19,16 +19,9 @@
 <body>
 	<div id="content1" class="content">
 		<div id="invoiceHeader">
-			<table>
-				<tr>
-					<td>Issuer</td>
-					<td>${senderName}</td>
-				</tr>
-				<tr>
-					<td>Reciever</td>
-					<td>${recieverName}</td>
-				</tr>
-			</table>
+			Issuer: <b>${senderName}</b>
+			<br />
+			Reciever: <b>${recieverName}</b>
 		</div>
 		<div id="files" class="panel">
 			<h3>Add document:</h3>

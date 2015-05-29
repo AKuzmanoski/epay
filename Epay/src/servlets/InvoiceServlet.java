@@ -64,16 +64,6 @@ public class InvoiceServlet extends HttpServlet {
 	}
 	
 	private void setAttributes(HttpServletRequest request, Invoice invoice) {
-		Object sourceAccount = request.getAttribute(
-				"sourceAccount");
-		Object destinationAccount = request.getAttribute(
-				"destinationAccount");
-		if (sourceAccount == null) {
-			sourceAccount = request
-					.getParameter("sourceAccount");
-			destinationAccount = request
-					.getParameter("destinationAccount");
-		}
 		System.out.println(invoice);
 		try {
 			request.setAttribute("documents", invoice.getDocuments());
@@ -84,10 +74,8 @@ public class InvoiceServlet extends HttpServlet {
 			request.setAttribute("recieverAccounts", reciever.getAccountsCards());
 			request.setAttribute("senderId", sender.getIdUser());
 			request.setAttribute("senderName", sender.getFullName());
-			request.setAttribute("senderAccount", sourceAccount.toString());
 			request.setAttribute("recieverID", reciever.getIdUser());
 			request.setAttribute("recieverName", reciever.getFullName());
-			request.setAttribute("recieverAccount", destinationAccount.toString());
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -46,8 +46,9 @@ public class Invoice extends Entity {
 		List<Document> documents = new ArrayList<Document>();
 		
 		while(resultSet.next()) {
-			documents.add(new Document(st.getLong("idDocuments"), st.getLong("invoice"), 
-					st.getString("title"), st.getString("description"), st.getString("url")));
+			documents.add(new Document(st.getInt("idDocuments"), st.getInt("invoice"), 
+					st.getString("title"), st.getString("description"), 
+					st.getString("url")));
 		}
 		
 		return documents;

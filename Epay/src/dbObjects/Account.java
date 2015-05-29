@@ -186,6 +186,30 @@ public class Account extends Entity {
 	public void setDateTo(Date dateTo) {
 		this.dateTo = dateTo;
 	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public double getLimit() {
+		return limit;
+	}
+
+	public void setLimit(double limit) {
+		this.limit = limit;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
 	
 	
 	
