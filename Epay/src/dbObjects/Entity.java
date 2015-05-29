@@ -8,12 +8,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 
 public class Entity {
 	protected Connection getConnection() throws SQLException, InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, IOException {
 		// passwords shouldn't be hard-coded into the code, a better practice is to read them from file
-		String passLoc = "/home/goran/dbpass";
+		Map<String, String> env = System.getenv();
+		String passLoc = env.get("DBPASS");
 		BufferedReader br = new BufferedReader(new FileReader(passLoc));
 		String pass = br.readLine();
 		br.close();

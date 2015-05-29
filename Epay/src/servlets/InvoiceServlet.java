@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Servlet implementation class UploadServlet
  */
-@WebServlet("/UploadServlet")
+@WebServlet("/InvoiceServlet")
 public class InvoiceServlet extends HttpServlet {
 	/**
 	 * 
@@ -48,22 +48,31 @@ public class InvoiceServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, java.io.IOException {
-
 		Invoice invoice = getInvoice(request);
+		System.out.println("Tuka sum");
 
 		// Check that we have a file upload request
 		isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (isMultipart) {
 			uploadFile(request, invoice.getIdInvoice());
 		}
-
-		Long sourceAccount = Long.parseLong(request.getAttribute("sourceAccount")
-				.toString());
-		Long destinationAccount = Long.parseLong(request.getAttribute("destinationAccount")
-				.toString());
+		
+		// Generate new page
+		setAttributes(request, invoice);
+		request.getRequestDispatcher("Invoice/Invoice.jsp").forward(
+				request, response);
+	}
+	
+	private void setAttributes(HttpServletRequest request, Invoice invoice) {
+		Object sourceAccount = request.getAttribute(
+				"sourceAccount");
+		Object destinationAccount = request.getAttribute(
+				"destinationAccount");
 		if (sourceAccount == null) {
-			sourceAccount = Long.parseLong(request.getParameter("sourceAccount"));
-			destinationAccount = Long.parseLong(request.getParameter("destinationAccount"));
+			sourceAccount = request
+					.getParameter("sourceAccount");
+			destinationAccount = request
+					.getParameter("destinationAccount");
 		}
 
 		try {
@@ -71,16 +80,14 @@ public class InvoiceServlet extends HttpServlet {
 			request.setAttribute("paychecks", invoice.getPaychecks());
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
-			request.setAttribute("senderAccounts", sender.getAccounts());
-			request.setAttribute("recieverAccounts", sender.getAccounts());
+			request.setAttribute("senderAccounts", sender.getAccountsCards());
+			request.setAttribute("recieverAccounts", reciever.getAccountsCards());
 			request.setAttribute("senderId", sender.getIdUser());
 			request.setAttribute("senderName", sender.getFullName());
-			request.setAttribute("senderAccount", sourceAccount);
+			request.setAttribute("senderAccount", sourceAccount.toString());
 			request.setAttribute("recieverID", reciever.getIdUser());
 			request.setAttribute("recieverName", reciever.getFullName());
-			request.setAttribute("recieverAccount", destinationAccount);
-			
-			request.getRequestDispatcher("Invoice/Invoice.jsp").forward(request, response);;
+			request.setAttribute("recieverAccount", destinationAccount.toString());
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,23 +100,21 @@ public class InvoiceServlet extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	private Invoice getInvoice(HttpServletRequest request) {
-		Long invoiceID = Long.parseLong(request.getParameter("invoiceid"));
+		Object invoiceID = request.getParameter("invoiceid");
 		if (invoiceID == null)
-			invoiceID = Long.parseLong(request.getAttribute("invoiceid").toString());
+			invoiceID = request.getAttribute("invoiceid");
 		Long destinationUser = null;
 		Long sourceUser = null;
-		if (invoiceID == null) {
-			// The invoice is not created, so this is create step
-			sourceUser = Long.parseLong(request.getAttribute("sourceUser")
-					.toString());
-			destinationUser = Long.parseLong(request.getAttribute(
-					"destinationUser").toString());
+		if (invoiceID != null) {
 			try {
-				invoiceID = Queries.insertNewInvoice(sourceUser, destinationUser);
+				return new Invoice(Long.parseLong(invoiceID.toString()));
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -126,9 +131,33 @@ public class InvoiceServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return new Invoice(invoiceID, sourceUser, destinationUser);
+			return null;
 		} else {
-			return new Invoice(invoiceID, sourceUser, destinationUser);
+			// The invoice is not created, so this is create step
+			sourceUser = Long.parseLong(request.getAttribute("sourceUser")
+					.toString());
+			destinationUser = Long.parseLong(request.getAttribute(
+					"destinationUser").toString());
+			try {
+				invoiceID = Queries.insertNewInvoice(sourceUser,
+						destinationUser);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return new Invoice(Long.parseLong(invoiceID.toString()), sourceUser, destinationUser);
 		}
 	}
 

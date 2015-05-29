@@ -9,13 +9,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>ePay - Income</title>
-<link type="text/css" rel="stylesheet" href="Invoice.css"></link>
-<link type="text/css" rel="stylesheet"
-	href="../jQuery/jquery-ui.min.css"></link>
+<link type="text/css" rel="stylesheet" href="Invoice/Invoice.css"></link>
+<link type="text/css" rel="stylesheet" href="jQuery/jquery-ui.min.css"></link>
 
-<script type="text/javascript" src="../jQuery/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="../jQuery/jquery-ui.min.js"></script>
-<script type="text/javascript" src="Invoice.js"></script>
+<script type="text/javascript" src="jQuery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="jQuery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="Invoice/Invoice.js"></script>
 </head>
 <body>
 	<div id="content1" class="content">
@@ -66,15 +65,27 @@
 
 
 		<div id="paychecks" class="panel">
-			<form id="documentForm" action="../InvoiceServlet" method="post">
+			<form id="documentForm" action="../PaycheckServlet" method="post">
 				<table>
 					<tr>
-						<td>${senderName}'s account</td>
+						<td>${senderName}'saccount</td>
 						<td><select id="senderAccounts" name="senderAccount">
 								<c:forEach var="entry" items="${senderAccounts}">
 									<option value="${entry.key}">${entry.value}</option>
 								</c:forEach>
 						</select></td>
+					</tr>
+					<tr>
+						<td>${recieverName}'saccount</td>
+						<td><select id="recieverAccounts" name="recieverAccount">
+								<c:forEach var="entry" items="${recieverAccounts}">
+									<option value="${entry.key}">${entry.value}</option>
+								</c:forEach>
+						</select></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" id="paycheckSubmit" value="Add New Paycheck" /></td>
 					</tr>
 				</table>
 			</form>

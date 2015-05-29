@@ -3,15 +3,20 @@ body {
 	font-family: sans-serif;
 }
 
-viewState {
+.viewState {
 	display: none;
 }
 
-#documentForm {
+.panel {
 	width: 40%;
+	border: thin solid black;
 }
 
 form {
+	width: 100%;
+}
+
+table {
 	width: 100%;
 }
 
@@ -23,10 +28,6 @@ table td:first-child {
 	width: 30%;
 }
 
-input {
-	width: 70%;
-}
-
-textarea {
+input, textarea, select {
 	width: 70%;
 }
