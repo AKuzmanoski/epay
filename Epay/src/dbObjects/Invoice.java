@@ -47,7 +47,7 @@ public class Invoice extends Entity {
 		
 		while(resultSet.next()) {
 			documents.add(new Document(resultSet.getLong("idDocuments"), resultSet.getLong("invoice"), 
-					resultSet.getString("title"), resultSet.getString("description"), resultSet.getString("url")));
+					resultSet.getString("title"), resultSet.getString("description"), resultSet.getString("url"), resultSet.getString("content_type")));
 		}
 		
 		return documents;
