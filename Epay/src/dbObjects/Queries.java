@@ -1,6 +1,8 @@
 package dbObjects;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import security.PasswordHash;
 
 public class Queries {
 	
@@ -38,15 +42,17 @@ public class Queries {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 * @throws IOException
+	 * @throws InvalidKeySpecException 
+	 * @throws NoSuchAlgorithmException 
 	 */
 	public static void insertNewUser(String username, String password, String fullname,
 		String email, String contact, Date dateOfBirth, String address, boolean isIndividual, String embg,
-		String cardnum) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		String cardnum) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		Connection conn = Holder.getConnection();
 		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
-		st.setString("password", password);
+		st.setString("password", PasswordHash.createHash(password));
 		st.setString("fullname", fullname);
 		st.setString("email", email);
 		st.setString("contact", contact);
