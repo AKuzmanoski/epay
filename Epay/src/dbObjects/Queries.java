@@ -294,4 +294,26 @@ public class Queries {
 		
 		return allUsers;
 	}
+	
+	public static long insertNewPaycheck(long accountFrom, long accountTo,
+			double amount, String description, String receiverName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewPaycheck(?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accFrom", accountFrom);
+		st.setLong("accTo", accountTo);
+		st.setDouble("amount", amount);
+		st.setString("description", description);
+		st.setString("receiverName", receiverName);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		return newId;
+	}
 }
+
+

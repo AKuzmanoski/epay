@@ -11,6 +11,7 @@ public class Paycheck extends Entity {
 	private double amount;
 	private String description;
 	private String receiverName;
+	private boolean isPaid;
 
 	public Paycheck(long idPaycheck, long accountFrom, long accountTo,
 			double amount, String description, String receiverName) {
@@ -21,6 +22,7 @@ public class Paycheck extends Entity {
 		this.amount = amount;
 		this.description = description;
 		this.receiverName = receiverName;
+		this.isPaid = false;
 	}
 
 	public Paycheck(long idPaycheck) throws InstantiationException,
@@ -99,4 +101,13 @@ public class Paycheck extends Entity {
 		this.receiverName = receiverName;
 	}
 
+	public boolean isPaid() {
+		return isPaid;
+	}
+
+	public void setPaid(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
+
+	
 }
