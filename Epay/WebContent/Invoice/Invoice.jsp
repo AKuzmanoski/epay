@@ -59,15 +59,9 @@
 			<h3>Add document:</h3>
 			<form id="documentForm" action="InvoiceServlet" method="post"
 				enctype="multipart/form-data">
-				<input type="text" class="viewState" name="invoiceid"
+				<input type="hidden" class="viewState" name="invoiceid"
 					value="${invoiceid}" />
 				<table>
-					<tr>
-						<td>File Name</td>
-						<td><input type="text" class="prominent" id="fileName"
-							name="fileName"> <img id="firstnameErr" class="err"
-							src="Images/error.png" title="This field is required." /></td>
-					</tr>
 					<tr>
 						<td>Description</td>
 						<td><textarea id="fileDescription" class="prominent"
@@ -81,7 +75,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><input class="prominent" type="submit"
+						<td><input type="submit" class="prominent"
 							value="Upload File" /></td>
 					</tr>
 				</table>
