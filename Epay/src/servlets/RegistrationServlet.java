@@ -97,10 +97,8 @@ public class RegistrationServlet extends HttpServlet {
 				return;
 			}
 
-			if (Queries.isAccountFree(accountNumber)) {
-				Queries.insertNewAccount(accountNumber, new java.sql.Date(
-						dateFrom.getTime()),
-						new java.sql.Date(dateTo.getTime()));
+			if (Queries.isAccountFree(accountNumber)) {//need to be changed these values [Goran]
+				Queries.insertNewAccount(accountNumber, null, null, 0, 0, bank);	
 			}
 
 			if (!Queries.isAccountNotInOwnership(accountNumber)) {
