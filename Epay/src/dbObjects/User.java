@@ -223,7 +223,8 @@ public class User extends Entity {
 		
 		while(resultSet.next()) {
 			accounts.add(new Account(resultSet.getLong("accountId"), resultSet.getString("cardnumber")
-					, resultSet.getDate("datefrom"), resultSet.getDate("dateto")));
+					, resultSet.getDate("datefrom"), resultSet.getDate("dateto"), 
+					resultSet.getDouble("balance"), resultSet.getDouble("limit"), resultSet.getString("bank")));
 		}
 		
 		return accounts;

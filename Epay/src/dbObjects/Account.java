@@ -28,12 +28,18 @@ public class Account extends Entity {
 		setParamsById(id);
 	}
 	
-	public Account(long accountId, String cardNumber, Date dateFrom, Date dateTo) {
+	
+
+	public Account(long accountId, String cardNumber, Date dateFrom,
+			Date dateTo, double balance, double limit, String bank) {
 		super();
 		this.accountId = accountId;
 		this.cardNumber = cardNumber;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
+		this.balance = balance;
+		this.limit = limit;
+		this.bank = bank;
 	}
 
 	public void setParamsById(long id) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
@@ -172,7 +178,7 @@ public class Account extends Entity {
 
 	@Override
 	public String toString() {
-		return accountId + "\t" + cardNumber + "\t" + dateFrom + "\t" + dateTo;
+		return accountId + "\t" + cardNumber + "\t" + dateFrom + "\t" + dateTo + "\t" + balance + "\t" + limit + "\t" + bank;
 	}
 
 	public long getAccountId() {
