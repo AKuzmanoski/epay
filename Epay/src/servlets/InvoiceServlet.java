@@ -138,9 +138,9 @@ public class InvoiceServlet extends HttpServlet {
 			return null;
 		} else {
 			// The invoice is not created, so this is create step
-			sourceUser = Long.parseLong(request.getAttribute("sourceUser")
+			sourceUser = Long.parseLong(request.getParameter("sourceUser")
 					.toString());
-			destinationUser = Long.parseLong(request.getAttribute(
+			destinationUser = Long.parseLong(request.getParameter(
 					"destinationUser").toString());
 			try {
 				invoiceID = Queries.insertNewInvoice(sourceUser,

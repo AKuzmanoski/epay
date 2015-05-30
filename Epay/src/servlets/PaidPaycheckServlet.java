@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.mysql.fabric.Response;
 
+import dbObjects.Account;
 import dbObjects.Invoice;
 import dbObjects.Paycheck;
 import dbObjects.User;
@@ -47,58 +48,91 @@ public class PaidPaycheckServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		long userid=-1;
-		Cookie[] cookies=request.getCookies();
-		//System.out.println(cookies.length);
-		if (cookies != null) {
-			for (int i=0;i<cookies.length;i++) {
-				Cookie cookie=cookies[i];
-				//System.out.println("kuki name-"+cookie.getName());
-				if (cookie.getName().equals("user")) {	
-					//System.out.println("found");
-				    userid=Long.parseLong(cookie.getValue());
-			     }
+		//prvo baraj go vo session
+		userid=Long.parseLong(request.getSession().getAttribute("user").toString());
+		//ako nema baraj go vo cookie
+		if(userid==-1){
+			Cookie[] cookies=request.getCookies();
+			if (cookies != null) {
+				for (int i=0;i<cookies.length;i++) {
+					Cookie cookie=cookies[i];
+					if (cookie.getName().equals("user")) {	
+					    userid=Long.parseLong(cookie.getValue());
+				     }
+				}
 			}
 		}
+				
 		User user=null;
-	    if(userid!=-1){
-	      // ako ima id zemi go userot od baza
+	   
 		try {
 			user = new User(userid);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-	    }
-	    else{
-	    	//ako nema zemi cel objekt user od session
-	    	user=(User) request.getSession().getAttribute("user");
-	    }
 	    Paycheck paycheck=null;
 	    Invoice invoice=null;
+	    Account accountFrom=null;
+	    Account accountTo=null;
 	    String idString=request.getParameter("paycheckSelected");
 	    String type=request.getParameter("typeOfItem");
 	    System.out.println("idpaycheck "+idString);
-	    if(type.equals("paycheckSent") || type.equals("paychecksReceived")){
+	    if(type.equals("paycheckSent") || type.equals("paycheckReceived")){
 	    	try {
 	    		paycheck=new Paycheck(Long.parseLong(idString));
 	    	} catch (Exception e) {
 	    		// TODO Auto-generated catch block
 	    		e.printStackTrace();
 	    	}
+	    	long accFromId=paycheck.getAccountFrom();
+	    	long accToId=paycheck.getAccountTo();
+	    	try {
+				accountFrom=new Account(accFromId);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	    	try {
+				accountTo=new Account(accToId);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	    	
 	    }else{
 	    	
 	    }
-	    
+	    System.out.println("aFrm"+accountFrom);
+	    System.out.println("aTo"+accountTo);
 	    if(type.equals("paycheckSent")){
-	    	request.setAttribute("applicant", user);
-	    	request.setAttribute("paycheck", paycheck);
-	        RequestDispatcher dispatcher=request.getRequestDispatcher("PaycheckPaid.jsp");
+	    	request.setAttribute("applicantName", user.getFullName());
+	    	request.setAttribute("applicantAddress", user.getAddress());
+	    	request.setAttribute("applicantEmbg", user.getEmbg());
+	    	request.setAttribute("applicantAccount",accountFrom.getCardNumber());
+	    	request.setAttribute("receiverName",paycheck.getReceiverName());
+	    	request.setAttribute("receiverAccount",accountTo.getCardNumber());
+	    	request.setAttribute("description", paycheck.getDescription());
+	    	request.setAttribute("amount", paycheck.getAmount());
+	    	request.setAttribute("applicantBank", accountFrom.getBank());
+	    	request.setAttribute("receiverBank",accountTo.getBank());
+	        RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 	 	    dispatcher.forward(request, response);
 	    	
 	    }else if(type.equals("paycheckReceived")){
-	    	request.setAttribute("receiver", user);
-	    	request.setAttribute("paycheck", paycheck);
-	    	RequestDispatcher dispatcher=request.getRequestDispatcher("PaycheckPaid.jsp");
+	    	request.setAttribute("receiverName", user.getFullName());
+	    
+	    
+	    	request.setAttribute("applicantAccount",accountFrom.getCardNumber());
+	    	request.setAttribute("receiverAccount",accountTo.getCardNumber());
+	    	
+	    	//request.setAttribute("applicantName",paycheck.getReceiverName());
+	    	request.setAttribute("description", paycheck.getDescription());
+	    	request.setAttribute("amount", paycheck.getAmount());
+	    	
+	    	request.setAttribute("applicantBank", accountFrom.getBank());
+	    	request.setAttribute("receiverBank",accountTo.getBank());
+	        RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 	 	    dispatcher.forward(request, response);
 	    	
 	    }else if(type.equals("invoiceSent")){

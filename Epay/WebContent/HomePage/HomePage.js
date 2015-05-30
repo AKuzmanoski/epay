@@ -5,8 +5,11 @@
 $(document).ready(function() {
 	
 	$("#dropdown").change(function() {
+		alert("sjslefjl");
 		  $("#dropdownform").submit();
 		});
+	
+	
 	$("#tabs").tabs();
 	$( "#listBills" ).selectable({
 		  selected: function( event, ui ) {

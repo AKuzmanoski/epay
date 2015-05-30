@@ -26,40 +26,6 @@ public class LoginServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, java.io.IOException {
-
-		try {
-
-			String pass = request.getParameter("pass");
-			String username = request.getParameter("username");
-			System.out.println(username);
-			
-			User user = new User(username, pass);
-			
-			if(user.getPass().equals(pass)) {
-				//succesfull  
-				HttpSession session = request.getSession(true);
-				session.setAttribute("currentSessionUser", user);
-//				response.sendRedirect("userHomePage.jsp");
-				response.sendRedirect("userLogged.jsp");
-			}
-			else {
-				response.sendRedirect("invalidLogin.jsp");
-			}
-
-//			if (user.isValid()) {
-//
-//				HttpSession session = request.getSession(true);
-//				session.setAttribute("currentSessionUser", user);
-//				response.sendRedirect("userLogged.jsp"); // logged-in page
-//			}
-//
-//			else
-//				response.sendRedirect("invalidLogin.jsp"); // error page
-		}
-
-		catch (Throwable theException) {
-			System.out.println(theException);
-		}
 	}
 	
 	@Override
@@ -69,14 +35,9 @@ public class LoginServlet extends HttpServlet {
 		try {
 			String username = req.getParameter("username");
 			String pass = req.getParameter("pass");
-			//if (username == null);
-			//username = (String)req.getAttribute("username");
-			//pass = (String)req.getAttribute("password");
-			//System.out.println(username);
-			//System.out.println(pass);
+			
 			User user = new User(username, pass);
-			//System.out.println("user"+user);
-			//System.out.println("username "+user.getFullName());
+
 			if(user.getPass().equals(pass)) {
 				//succesfull  
 				
@@ -84,11 +45,10 @@ public class LoginServlet extends HttpServlet {
 				cookie.setMaxAge(48 * 60 * 60);
 				resp.addCookie(cookie);
 				
-				req.getSession().setAttribute("user", user);
-//				response.sendRedirect("userHomePage.jsp");
-				//System.out.println("added cookie");
+				req.getSession().setAttribute("user", Long.toString(user.getIdUser()));
+
 				req.getRequestDispatcher("LoginToHomeServlet").forward(req, resp);
-				//resp.sendRedirect("userHomePage.jsp");
+
 			}
 			else {
 				resp.sendRedirect("invalidLogin.jsp");

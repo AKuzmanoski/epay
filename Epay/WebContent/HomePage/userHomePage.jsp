@@ -27,7 +27,8 @@
 <body>
 	
 	<div class="content">
-	    User <c:out value="${user.fullName}"></c:out>
+	    User <c:out value="${userFullName}"></c:out>
+	     <input id="sourceUser" type="hidden" name="sourceUser" user="${userid}"/>
 	    <br/>
 	    Select your account:
 	    <form id="dropdownform" action="LoginToHomeServlet" method="post">
@@ -60,6 +61,18 @@
        	<div id="tabs-2">
       	</div>
         <div id="tabs-3">
+        You can choose a receiver:
+        <form action="InvoiceServlet" id="usersDropDownForm" method="post">
+        <input id="sourceUser" type="hidden" name="sourceUser" value="${userid}"/>
+        <select id="destinationUser" name="destinationUser">    
+	      	<c:forEach var="entry" items="${users}">
+  				<option value="${entry.key}">${entry.value}</option>
+			</c:forEach>
+	    </select>
+	    
+	    <input id="newPaycheck" type="submit" value="Create Paycheck">
+        </form>
+        
         </div>
 	    </div>
 	</div>

@@ -24,9 +24,13 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
+
 //import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import dbObjects.Account;
 import dbObjects.Paycheck;
+import dbObjects.Queries;
 import dbObjects.User;
 
 /**
@@ -56,37 +60,33 @@ public class LoginToHomeServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-				//ova bi se zemalo od cookie
-				
-				//account id, card number za accountite na toj user
+
 				
 			long userid=-1;
-			Cookie[] cookies=request.getCookies();
-			//System.out.println(cookies.length);
-			if (cookies != null) {
-				for (int i=0;i<cookies.length;i++) {
-					Cookie cookie=cookies[i];
-					//System.out.println("kuki name-"+cookie.getName());
-					if (cookie.getName().equals("user")) {	
-						//System.out.println("found");
-					    userid=Long.parseLong(cookie.getValue());
-				     }
+			//prvo baraj go vo session
+			userid=Long.parseLong(request.getSession().getAttribute("user").toString());
+			//ako nema baraj go vo cookie
+			if(userid==-1){
+				Cookie[] cookies=request.getCookies();
+				if (cookies != null) {
+					for (int i=0;i<cookies.length;i++) {
+						Cookie cookie=cookies[i];
+						if (cookie.getName().equals("user")) {	
+						    userid=Long.parseLong(cookie.getValue());
+					     }
+					}
 				}
 			}
+					
 			User user=null;
-		    if(userid!=-1){
-		      // ako ima id zemi go userot od baza
+		   
 			try {
 				user = new User(userid);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-		    }
-		    else{
-		    	//ako nema zemi cel objekt user od session
-		    	user=(User) request.getSession().getAttribute("user");
-		    }
+		    
 			System.out.println(user.getFullName());
 			Map<String, String> accounts=null;
 			try {
@@ -139,9 +139,25 @@ public class LoginToHomeServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-		     
+		    List<User> useri=null;
+		     try {
+				useri=Queries.getAllUsers();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		    Map<Long,String> users=new HashMap<Long, String>();
+		    for (User user2 : useri) {
+		    	if(user.getIdUser()!=user2.getIdUser()){
+				users.put(user2.getIdUser(), user2.getFullName()+"("+user2.getUserName()+")");
+		    	}
+			}
+		    
+		    
 		    System.out.println("s"+sentPaychecks.size());
-		    request.setAttribute("user", user);
+		    request.setAttribute("users", users);
+		    request.setAttribute("userid", user.getIdUser());
+		    request.setAttribute("userFullName", user.getFullName());
 		    request.setAttribute("accounts", accounts);
 		    request.setAttribute("sentPaychecks", sentPaychecks);
 		    request.setAttribute("receivedPaychecks", receivedPaychecks);
