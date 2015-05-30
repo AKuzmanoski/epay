@@ -12,15 +12,17 @@ public class Document {
 	private String title;
 	private String description;
 	private String url;
+	private String content_type;
 	
 	public Document(long idDocument, long invoice, String title,
-			String description, String url) {
+			String description, String url, String content_type) {
 		super();
 		this.idDocument = idDocument;
 		this.invoice = invoice;
 		this.title = title;
 		this.description = description;
 		this.url = url;
+		this.content_type = content_type;
 	}
 	
 	public Document(long idDoc) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
@@ -41,6 +43,7 @@ public class Document {
 			title = resultSet.getString("title");
 			description = resultSet.getString("description");
 			url = resultSet.getString("url");
+			content_type = resultSet.getString("content_type");
 		}
 	}
 
@@ -84,6 +87,16 @@ public class Document {
 		this.url = url;
 	}
 	
+	
+	
+	public String getContent_type() {
+		return content_type;
+	}
+
+	public void setContent_type(String content_type) {
+		this.content_type = content_type;
+	}
+
 	@Override
 	public String toString() {
 		return idDocument + "\t" + invoice + "\t" + title + "\t" + description + "\t" + url;
