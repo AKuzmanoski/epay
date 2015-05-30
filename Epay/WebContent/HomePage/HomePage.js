@@ -5,7 +5,6 @@
 $(document).ready(function() {
 	
 	$("#dropdown").change(function() {
-		alert("sjslefjl");
 		  $("#dropdownform").submit();
 		});
 	
@@ -14,7 +13,6 @@ $(document).ready(function() {
 	$( "#listBills" ).selectable({
 		  selected: function( event, ui ) {
 			  $("#paycheckSelected").val($(".ui-selected").attr("id"));
-			  $("#typeOfItem").val($(".ui-selected").attr("type"));
               $("#list").submit();
 		  }
 		});

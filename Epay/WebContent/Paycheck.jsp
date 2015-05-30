@@ -86,7 +86,9 @@ align:middle;
 			<label>PP50</label>
 		  </div>
 		  <br/>
-		  <input id="btnPay" type="submit" value="PAY"/>  
+		  <input type="hidden" id="createNew" name="createNew" value="${createNew}">
+		  <label style="${createdPaycheckVisible}">Your paycheck has been created</label>
+		  <input id="btnPay" type="submit" value="PAY"  style="${buttonVisible}"/>  
 		</div>
 		
 		</form>

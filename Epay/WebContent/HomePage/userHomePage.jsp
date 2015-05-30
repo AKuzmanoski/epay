@@ -18,17 +18,19 @@
      
      <style>
   #feedback { font-size: 1.4em; }
-  #listBills .ui-selecting { background: #FECA40; }
-  #listBills .ui-selected { background: #F39814; color: white; }
-  #listBills { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  #listBills li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+  #listBills .paycheck.ui-selectee { background: #FFADAD; }
+  #listBills .paycheck.ui-selected { background: #FF9999; color: white; }
+    #listBills .invoice.ui-selecting { background: #FFAD5C; }
+  #listBills .invoice.ui-selected { background: #FF9933, color: white; }
+  #listBills { list-style-type: none; margin: 0; padding: 0; width: 40%; }
+  #listBills li { margin: 3px; padding: 0.4em; font-size: 1em; height: 18px; }
   </style>
 </head>
 <body>
 	
 	<div class="content">
 	    User <c:out value="${userFullName}"></c:out>
-	     <input id="sourceUser" type="hidden" name="sourceUser" user="${userid}"/>
+
 	    <br/>
 	    Select your account:
 	    <form id="dropdownform" action="LoginToHomeServlet" method="post">
@@ -45,23 +47,36 @@
     			<li><a href="#tabs-3">New Invoice</a></li>
   			</ul>
   		<div id="tabs-1">
-  		<form id="list" action="PaidPaycheckServlet" method="post">
+  		<form id="list" action="PaycheckServlet" method="post">
   		   <input id="paycheckSelected" type="hidden" name="paycheckSelected" />
   		   <input id="typeOfItem" type="hidden" name="typeOfItem"/>
   		   <ul id="listBills">
   		     <c:forEach items="${sentPaychecks}" var="entry">
-				<li class="ui-widget-content" id="${entry.idPaycheck}" type="paycheckSent">-&gt${entry.description}</li>		
+				<li class="paycheck" id="${entry.idPaycheck}">-&gt${entry.description}</li>		
 				</c:forEach>
 			 <c:forEach items="${receivedPaychecks}" var="entry">
-				<li class="ui-widget-content" id="${entry.idPaycheck}" type="paycheckReceived">&lt-${entry.description}</li>		
+				<li class="paycheck" id="${entry.idPaycheck}">&lt-${entry.description}</li>		
 				</c:forEach>
+				<li class="invoice">Probna smetka</li>
   		   </ul>
   		</form>
         </div>
        	<div id="tabs-2">
+       	You can choose a receiver from the list:
+       	 <form action="PaycheckServlet" method="post">
+       	Choose one of your accounts:
+       	 <select  name="selectedAccount">
+	      	<c:forEach var="entry" items="${accounts}">
+  				<option value="${entry.key}">${entry.value}</option>
+			</c:forEach>
+	    </select>
+     
+	    <input id="newPaycheck1" type="submit" value="Create Paycheck">
+	    </form>
       	</div>
+      	
         <div id="tabs-3">
-        You can choose a receiver:
+        Choose a receiver from the list:
         <form action="InvoiceServlet" id="usersDropDownForm" method="post">
         <input id="sourceUser" type="hidden" name="sourceUser" value="${userid}"/>
         <select id="destinationUser" name="destinationUser">    
@@ -70,7 +85,7 @@
 			</c:forEach>
 	    </select>
 	    
-	    <input id="newPaycheck" type="submit" value="Create Paycheck">
+	    <input id="newPaycheck" type="submit" value="Create Invoice">
         </form>
         
         </div>
