@@ -215,11 +215,12 @@ public class InvoiceServlet extends HttpServlet {
 	 */
 	private void uploadFile(HttpServletRequest request, long invoice) {
 		// Check that we have a file upload request
-		String folderPath = filePath + invoice + "\\";
+		String folderPath = filePath + invoice + "/";
 		folder = new File(folderPath);
 		folder.mkdir();
 		String fileName = null;
 		String fileDescription = null;
+		String contentType = null;
 
 		Iterator<FileItem> i = fileItems.iterator();
 		FileItem fi = null;
@@ -228,7 +229,7 @@ public class InvoiceServlet extends HttpServlet {
 			if (!fi.isFormField()) {
 				// Get the uploaded file parameters
 				fileName = fi.getName();
-				System.out.println(fi.getContentType());
+				contentType = fi.getContentType();
 			} else {
 				if (fi.getFieldName().equals("fileDescription")) {
 					fileDescription = fi.getString();
@@ -240,9 +241,9 @@ public class InvoiceServlet extends HttpServlet {
 				fileName.length());
 
 		Long fileId = null;
-		/*try {
+		try {
 			fileId = Queries.insertNewDocument(invoice, fileName,
-					fileDescription, folderPath + extension);
+					fileDescription, folderPath + extension, contentType);
 		} catch (InstantiationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -258,7 +259,7 @@ public class InvoiceServlet extends HttpServlet {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}*/
+		}
 
 		file = new File(folderPath + fileId + extension);
 		try {
@@ -270,9 +271,11 @@ public class InvoiceServlet extends HttpServlet {
 	}
 
 	private void downloadFile(long fileId, HttpServletResponse response) {
-		File my_file = getFile(fileId);
-		// This should send the file to browser
 		try {
+			Document document = new Document(fileId);
+			File my_file = getFile(document, fileId);
+			response.setHeader("Content-disposition","attachment; filename=" + document.getTitle());
+		// This should send the file to browser
 			OutputStream out = response.getOutputStream();
 			FileInputStream in = new FileInputStream(my_file);
 			byte[] buffer = new byte[4096];
@@ -282,7 +285,7 @@ public class InvoiceServlet extends HttpServlet {
 			}
 			in.close();
 			out.flush();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -290,7 +293,8 @@ public class InvoiceServlet extends HttpServlet {
 
 	private void deleteFile(long fileId) {
 		try {
-			File fileToDelete = getFile(fileId);
+			Document document = new Document(fileId);
+			File fileToDelete = getFile(document, fileId);
 			fileToDelete.delete();
 			Queries.deleteDocument(fileId);
 		} catch (InstantiationException e) {
@@ -311,32 +315,13 @@ public class InvoiceServlet extends HttpServlet {
 		}
 	}
 
-	private File getFile(long fileId) {
-		try {
-			Document document = new Document(fileId);
+	private File getFile(Document document, Long fileId) {
 			String url = document.getUrl();
 
-			int extensionIndex = url.lastIndexOf("\\") + 1;
+			int extensionIndex = url.lastIndexOf("/") + 1;
 			String fullPath = url.substring(0, extensionIndex) + fileId
 					+ url.substring(extensionIndex, url.length());
 			return new File(fullPath);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	private Long getInvoiceIdFromMultipart(HttpServletRequest request) {
