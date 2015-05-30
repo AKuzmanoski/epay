@@ -99,14 +99,24 @@ public class Queries {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public static void insertNewAccount(String cardnum, Date datefrom, Date dateto) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+	public static long insertNewAccount(String cardnum, Date datefrom, Date dateto, 
+			double balance, double limit, String bank) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 			Connection conn = Holder.getConnection();
-			String sql = "{call insertNewAccount(?, ?, ?)}";
+			String sql = "{call insertNewAccount(?, ?, ?, ?, ?, ?)}";
 			CallableStatement st = conn.prepareCall(sql);
 			st.setString("cardnumber", cardnum);
 			st.setDate("datefrom", datefrom);
 			st.setDate("dateto", dateto);
+			st.setDouble("balance", balance);
+			st.setDouble("lim", limit);
+			st.setString("bank", bank);
 			st.execute();
+			ResultSet rs = st.getResultSet();
+			long newId = 0;
+			while(rs.next()) {
+				newId = rs.getLong("newId");
+			}
+			return newId;
 	}
 
 	/**
@@ -315,14 +325,16 @@ public class Queries {
 		return newId;
 	}
 	
-	public static long insertNewDocument(long invoice, String title, String description, String url) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+	public static long insertNewDocument(long invoice, String title, String description, 
+			String url, String content_type) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = Holder.getConnection();
-		String sql = "{call insertNewDocument(?, ?, ?, ?)}";
+		String sql = "{call insertNewDocument(?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("invoice", invoice);
 		st.setString("title", title);
 		st.setString("description", description);
 		st.setString("url", url);
+		st.setString("content_type", content_type);
 		st.execute();
 		
 		ResultSet rs = st.getResultSet();
