@@ -20,6 +20,20 @@ $(document).ready(function() {
 	$("#file").blur(function() {
 		validateNonEmpty($(this));
 	});
+	
+	$(".download").click(function() {
+		$("#operation").val("download");
+		$("#document").val($(this).parent().attr("id"));
+		$("#documentListForm").attr("target", "_blank");
+		$("#documentListForm").submit();
+	});
+	
+	$(".delete").click(function() {
+		$("#operation").val("delete");
+		$("#document").val($(this).parent().attr("id"));
+		$("#documentListForm").attr("target", "_self");
+		$("#documentListForm").submit();
+	});
 });
 
 function validateDocumentForm() {

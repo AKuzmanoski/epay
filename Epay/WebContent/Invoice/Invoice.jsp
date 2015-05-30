@@ -38,10 +38,10 @@
 			<form id="documentListForm" action="InvoiceServlet" method="post"
 				target="_blank">
 				<input type="text" class="viewState" name="invoiceid"
-					value="${invoiceid}" /> <input type="text" class="viewState"
-					id="document" name="document" value="${invoiceid}" /> <input
-					type="text" class="viewState" id="operation" name="operation"
-					value="${invoiceid}" />
+					value="${invoiceid}" /> 
+				<input type="text" class="viewState"
+					id="document" name="document" value="${invoiceid}" /> 
+				<input type="text" class="viewState" id="operation" name="operation" />
 				<ul id="listDocuments" class="lists">
 					<c:forEach items="${documents}" var="entry">
 						<li id="${entry.getIdDocument()}" class="ui-widget-content"
