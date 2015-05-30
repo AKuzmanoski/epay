@@ -1,6 +1,8 @@
 package dbObjects;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,6 +13,7 @@ public class Paycheck extends Entity {
 	private double amount;
 	private String description;
 	private String receiverName;
+	private boolean isPaid;
 
 	public Paycheck(long idPaycheck, long accountFrom, long accountTo,
 			double amount, String description, String receiverName) {
@@ -21,6 +24,7 @@ public class Paycheck extends Entity {
 		this.amount = amount;
 		this.description = description;
 		this.receiverName = receiverName;
+		this.isPaid = false;
 	}
 
 	public Paycheck(long idPaycheck) throws InstantiationException,
@@ -34,10 +38,14 @@ public class Paycheck extends Entity {
 	private void setPaycheckById(long idPaycheck) throws SQLException,
 			InstantiationException, IllegalAccessException,
 			ClassNotFoundException, IOException {
-		ResultSet resultSet = getResultSet("SELECT * FROM paycheck WHERE idpaycheck = "
-				+ idPaycheck);
+		Connection conn = getConnection();
+		String sql = "{call getPaycheckById(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", idPaycheck);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		
 		while (resultSet.next()) {
-			System.out.println(resultSet.getLong("idpaycheck"));
 			accountFrom = resultSet.getLong("accountFrom");
 			accountTo = resultSet.getLong("accountTo");
 			amount = resultSet.getDouble("amount");
@@ -99,4 +107,13 @@ public class Paycheck extends Entity {
 		this.receiverName = receiverName;
 	}
 
+	public boolean isPaid() {
+		return isPaid;
+	}
+
+	public void setPaid(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
+
+	
 }

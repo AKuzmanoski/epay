@@ -294,4 +294,44 @@ public class Queries {
 		
 		return allUsers;
 	}
+	
+	public static long insertNewPaycheck(long accountFrom, long accountTo,
+			double amount, String description, String receiverName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewPaycheck(?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accFrom", accountFrom);
+		st.setLong("accTo", accountTo);
+		st.setDouble("amount", amount);
+		st.setString("description", description);
+		st.setString("receiverName", receiverName);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		return newId;
+	}
+	
+	public static long insertNewDocument(long invoice, String title, String description, String url) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewDocument(?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("invoice", invoice);
+		st.setString("title", title);
+		st.setString("description", description);
+		st.setString("url", url);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		return newId;
+	}
 }
+
+
