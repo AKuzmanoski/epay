@@ -85,7 +85,7 @@
 	<div id="content2" class="content">
 		<div id="paychecks" class="panel">
 			<h3>Paychecks:</h3>
-			<form id="patcheckListForm" action="PaidPaycheckServlet" method="post">
+			<form id="patcheckListForm" action="PaycheckServlet" method="post">
 				<input type="text" class="viewState" name="invoiceid"
 					value="${invoiceid}" /> <input id="idpaycheck"
 					class="viewState" type="hidden" name="paycheckSelected" />
@@ -103,7 +103,7 @@
 		</div>
 		<div id="paycheckCreate" class="panel">
 			<h3>Add Paycheck:</h3>
-			<form id="paycheckCreateForm" action="PaidPaycheckServlet" method="post">
+			<form id="paycheckCreateForm" action="PaycheckServlet" method="post">
 				<input type="text" class="viewState" name="invoiceid"
 					value="${invoiceid}" />
 				<table>

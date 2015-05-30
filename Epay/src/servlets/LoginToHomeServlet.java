@@ -27,8 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
 //import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import dbObjects.Account;
+import dbObjects.Invoice;
 import dbObjects.Paycheck;
 import dbObjects.Queries;
 import dbObjects.User;
@@ -53,6 +56,7 @@ public class LoginToHomeServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		doPost(request, response);
 	}
 	
 	/**
@@ -62,21 +66,7 @@ public class LoginToHomeServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 
 				
-			long userid=-1;
-			//prvo baraj go vo session
-			userid=Long.parseLong(request.getSession().getAttribute("user").toString());
-			//ako nema baraj go vo cookie
-			if(userid==-1){
-				Cookie[] cookies=request.getCookies();
-				if (cookies != null) {
-					for (int i=0;i<cookies.length;i++) {
-						Cookie cookie=cookies[i];
-						if (cookie.getName().equals("user")) {	
-						    userid=Long.parseLong(cookie.getValue());
-					     }
-					}
-				}
-			}
+			long userid= checkUserSign(request, response);
 					
 			User user=null;
 		   
@@ -153,6 +143,25 @@ public class LoginToHomeServlet extends HttpServlet {
 		    	}
 			}
 		    
+		    List<Invoice> sentInvoices = null;
+		    List<Invoice> receivedInvoices = null;
+		    try {
+				sentInvoices = user.getSentInvoices();
+				receivedInvoices = user.getReceivedInvoices();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
 		    
 		    System.out.println("s"+sentPaychecks.size());
 		    request.setAttribute("users", users);
@@ -161,11 +170,37 @@ public class LoginToHomeServlet extends HttpServlet {
 		    request.setAttribute("accounts", accounts);
 		    request.setAttribute("sentPaychecks", sentPaychecks);
 		    request.setAttribute("receivedPaychecks", receivedPaychecks);
+		    request.setAttribute("sentInvoices", sentInvoices);
+		    request.setAttribute("receivedInvoices", receivedInvoices);
+		    request.setAttribute("balance", selectedAccount.getBalance());
+		    request.setAttribute("limit", selectedAccount.getLimit());
 		    System.out.println("sending");
 		    RequestDispatcher dispatcher=request.getRequestDispatcher("HomePage/userHomePage.jsp");
 		    dispatcher.forward(request, response);
 						 
 				
+	}
+	
+	private long checkUserSign(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		long userid=-1;
+		//prvo baraj go vo session
+		userid=Long.parseLong(request.getSession().getAttribute("user").toString());
+		//ako nema baraj go vo cookie
+		if(userid==-1){
+			Cookie[] cookies=request.getCookies();
+			if (cookies != null) {
+				for (int i=0;i<cookies.length;i++) {
+					Cookie cookie=cookies[i];
+					if (cookie.getName().equals("user")) {	
+					    userid=Long.parseLong(cookie.getValue());
+				     }
+				}
+			}
+		}
+		
+		if (userid == -1)
+			response.sendRedirect("loginPage.jsp");
+		return userid;
 	}
 }
 
