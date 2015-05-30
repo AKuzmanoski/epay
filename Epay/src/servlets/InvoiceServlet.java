@@ -40,6 +40,8 @@ public class InvoiceServlet extends HttpServlet {
 	private int maxFileSize = 50 * 1024;
 	private int maxMemSize = 4 * 1024;
 	private File file;
+	private File folder;
+	List<FileItem> fileItems;
 
 	public void init() {
 		// Get the file location where it would be stored.
@@ -51,42 +53,46 @@ public class InvoiceServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, java.io.IOException {
+		isMultipart = ServletFileUpload.isMultipartContent(request);
+		if (isMultipart) {
+			initFileItems(request);
+		}
+
 		Invoice invoice = getInvoice(request);
-		System.out.println("Tuka sum");
 
 		// Check that we have a file upload request
-		isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (isMultipart) {
 			uploadFile(request, invoice.getIdInvoice());
 		}
-		
+
 		// Generate new page
 		setAttributes(request, invoice);
-		request.getRequestDispatcher("Invoice/Invoice.jsp").forward(
-				request, response);
+		request.getRequestDispatcher("Invoice/Invoice.jsp").forward(request,
+				response);
 	}
-	
+
 	private void setAttributes(HttpServletRequest request, Invoice invoice) {
-		System.out.println(invoice);
 		try {
 			List<Paycheck> paychecks = invoice.getPaychecks();
+			request.setAttribute("invoiceid", invoice.getIdInvoice());
 			request.setAttribute("documents", invoice.getDocuments());
 			request.setAttribute("paychecks", paychecks);
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
 			request.setAttribute("senderAccounts", sender.getCompleteAccounts());
-			request.setAttribute("recieverAccounts", reciever.getCompleteAccounts());
+			request.setAttribute("recieverAccounts",
+					reciever.getCompleteAccounts());
 			request.setAttribute("senderId", sender.getIdUser());
 			request.setAttribute("senderName", sender.getFullName());
 			request.setAttribute("recieverID", reciever.getIdUser());
 			request.setAttribute("recieverName", reciever.getFullName());
-			
+
 			// Additional data
 			request.setAttribute("senderAddress", sender.getAddress());
 			request.setAttribute("senderContact", sender.getContact());
 			request.setAttribute("senderEmail", sender.getEmail());
 			request.setAttribute("recieverAddress", reciever.getAddress());
-			
+
 			float total = 0F;
 			for (Paycheck pc : paychecks) {
 				total += pc.getAmount();
@@ -111,14 +117,21 @@ public class InvoiceServlet extends HttpServlet {
 	}
 
 	private Invoice getInvoice(HttpServletRequest request) {
-		Object invoiceID = request.getParameter("invoiceid");
+		Object invoiceID = null;
+		isMultipart = ServletFileUpload.isMultipartContent(request);
+		if (isMultipart) {
+			invoiceID = getInvoiceIdFromMultipart(request);
+		} else {
+			invoiceID = request.getParameter("invoiceid");
+		}
 		if (invoiceID == null)
 			invoiceID = request.getAttribute("invoiceid");
 		Long destinationUser = null;
 		Long sourceUser = null;
 		if (invoiceID != null) {
 			try {
-				return new Invoice(Long.parseLong(invoiceID.toString()));
+				return new Invoice((long) Double.parseDouble(invoiceID
+						.toString()));
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -161,18 +174,12 @@ public class InvoiceServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return new Invoice(Long.parseLong(invoiceID.toString()), sourceUser, destinationUser);
+			return new Invoice(Long.parseLong(invoiceID.toString()),
+					sourceUser, destinationUser);
 		}
 	}
 
-	/**
-	 * Uploads file
-	 * 
-	 * @param request
-	 */
-	private void uploadFile(HttpServletRequest request, long invoice) {
-		// Check that we have a file upload request
-
+	private void initFileItems(HttpServletRequest request) {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		// maximum size that will be stored in memory
 		factory.setSizeThreshold(maxMemSize);
@@ -186,42 +193,60 @@ public class InvoiceServlet extends HttpServlet {
 
 		try {
 			// Parse the request to get file items.
-			List<FileItem> fileItems = upload.parseRequest(request);
+			fileItems = upload.parseRequest(request);
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
 
-			// Process the uploaded file items
-			Iterator<FileItem> i = fileItems.iterator();
+	/**
+	 * Uploads file
+	 * 
+	 * @param request
+	 */
+	private void uploadFile(HttpServletRequest request, long invoice) {
+		// Check that we have a file upload request
+		folder = new File(filePath + "\\" + invoice + "\\");
+		folder.mkdir();
 
-			while (i.hasNext()) {
-				FileItem fi = (FileItem) i.next();
-				if (!fi.isFormField()) {
-					// Get the uploaded file parameters
-					String fieldName = fi.getFieldName();
-					String fileName = fi.getName();
-					String contentType = fi.getContentType();
-					boolean isInMemory = fi.isInMemory();
-					long sizeInBytes = fi.getSize();
-					// Write the file
-					if (fileName.lastIndexOf("\\") >= 0) {
-						file = new File(
-								filePath
-										+ "\\"
-										+ invoice
-										+ fileName.substring(fileName
-												.lastIndexOf("\\")));
-					} else {
-						file = new File(
-								filePath
-										+ "\\"
-										+ invoice
-										+ fileName.substring(fileName
-												.lastIndexOf("\\") + 1));
-					}
+		Iterator<FileItem> i = fileItems.iterator();
+
+		while (i.hasNext()) {
+			FileItem fi = (FileItem) i.next();
+			if (!fi.isFormField()) {
+				// Get the uploaded file parameters
+				String fileName = fi.getName();
+				// Create new file in database
+				float fileId = 0F;
+				// Write the file
+				file = new File(filePath
+						+ "\\"
+						+ invoice
+						+ "\\"
+						+ ((long)fileId)
+						+ fileName.substring(fileName.indexOf("."),
+								fileName.length()));
+				try {
 					fi.write(file);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				if (fi.getFieldName().equals("fileDescription")) {
+					System.out.println(fi.getString());
 				}
 			}
-		} catch (Exception ex) {
-			System.out.println(ex);
 		}
+	}
+
+	private Float getInvoiceIdFromMultipart(HttpServletRequest request) {
+		for (FileItem item : fileItems) {
+			if (item.isFormField()) {
+				if (item.getFieldName().equals("invoiceid"))
+					return Float.parseFloat(item.getString());
+			}
+		}
+		return null;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)

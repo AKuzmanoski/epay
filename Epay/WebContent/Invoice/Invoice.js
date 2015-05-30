@@ -10,14 +10,11 @@ $(document).ready(function() {
 	});
 	
 	$("input[type=button].prominent, input[type=submit].prominent").button();
+	
 	$("#documentForm").submit(function( event ) {
 		if (!validateDocumentForm()) {
 			if(event.preventDefault) event.preventDefault(); else event.returnValue = false;
 		}
-	});
-	
-	$("#fileName").blur(function() {
-		validateNonEmpty($(this));
 	});
 	
 	$("#file").blur(function() {
@@ -27,8 +24,8 @@ $(document).ready(function() {
 
 function validateDocumentForm() {
 	var isValid = true;
-	isValid = validateNonEmpty($("#fileName"));
-	isValid = validateNonEmpty($("#file"));
+	isValid = validateNonEmpty($("#file")) && isValid;
+	return isValid;
 }
 
 function validateNonEmpty(field) {
