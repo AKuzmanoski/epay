@@ -102,15 +102,15 @@ public class Queries {
 	public static long insertNewAccount(String cardnum, Date datefrom, Date dateto, 
 			double balance, double limit, String bank) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 			Connection conn = Holder.getConnection();
-			String sql = "{call insertNewAccount(?, ?, ?)}";
+			String sql = "{call insertNewAccount(?, ?, ?, ?, ?, ?)}";
 			CallableStatement st = conn.prepareCall(sql);
 			st.setString("cardnumber", cardnum);
 			st.setDate("datefrom", datefrom);
 			st.setDate("dateto", dateto);
 			st.setDouble("balance", balance);
-			st.setDouble("limit", limit);
+			st.setDouble("lim", limit);
 			st.setString("bank", bank);
-			
+			st.execute();
 			ResultSet rs = st.getResultSet();
 			long newId = 0;
 			while(rs.next()) {
