@@ -85,9 +85,9 @@
 	<div id="content2" class="content">
 		<div id="paychecks" class="panel">
 			<h3>Paychecks:</h3>
-			<form id="patcheckListForm" action="PaycheckServlet" method="post">
+			<form id="patcheckListForm" action="PaidPaycheckServlet" method="post">
 				<input type="text" class="viewState" name="invoiceid"
-					value="${invoiceid}" /> <input id="paycheckSelected"
+					value="${invoiceid}" /> <input id="idpaycheck"
 					class="viewState" type="hidden" name="paycheckSelected" />
 				<ul id="listPaychecks" class="selectable lists">
 					<c:forEach items="${paychecks}" var="entry">
@@ -103,14 +103,14 @@
 		</div>
 		<div id="paycheckCreate" class="panel">
 			<h3>Add Paycheck:</h3>
-			<form id="paycheckCreateForm" action="PaycheckServlet" method="post">
+			<form id="paycheckCreateForm" action="PaidPaycheckServlet" method="post">
 				<input type="text" class="viewState" name="invoiceid"
 					value="${invoiceid}" />
 				<table>
 					<tr>
 						<td>${senderName}\'saccount</td>
 						<td><select class="prominent" id="senderAccounts"
-							name="senderAccount">
+							name="accountFrom">
 								<c:forEach var="entry" items="${senderAccounts}">
 									<option value="${entry.getAccountId()}">${entry.getCardNumber()}
 										(${entry.getBank()})</option>
@@ -120,7 +120,7 @@
 					<tr>
 						<td>${recieverName}\'saccount</td>
 						<td><select class="prominent" id="recieverAccounts"
-							name="recieverAccount">
+							name="accountTo">
 								<c:forEach var="entry" items="${recieverAccounts}">
 									<option value="${entry.getAccountId()}">${entry.getCardNumber()}
 										(${entry.getBank()})</option>

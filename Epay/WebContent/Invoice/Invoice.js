@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$(".selectable li").button();
 	
 	$(".selectable li").click(function () {
-		$("#paycheckSelected").val($(this).attr("id"));
+		$("#idpaycheck").val($(this).attr("id"));
 		 $("#patcheckListForm").submit();
 	});
 	

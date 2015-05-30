@@ -65,7 +65,6 @@ public class InvoiceServlet extends HttpServlet {
 		if (isMultipart) {
 			uploadFile(request, invoice.getIdInvoice());
 		} else if (request.getParameter("document") != null) {
-			System.out.println("TUKA");
 			if (request.getParameter("operation").equals("download")) {
 				downloadFile(Long.parseLong(request.getParameter("document")),
 						response);
@@ -102,6 +101,8 @@ public class InvoiceServlet extends HttpServlet {
 			request.setAttribute("senderContact", sender.getContact());
 			request.setAttribute("senderEmail", sender.getEmail());
 			request.setAttribute("recieverAddress", reciever.getAddress());
+			
+			request.getSession().setAttribute("user", sender.getIdUser());
 
 			float total = 0F;
 			for (Paycheck pc : paychecks) {
@@ -274,6 +275,7 @@ public class InvoiceServlet extends HttpServlet {
 		try {
 			Document document = new Document(fileId);
 			File my_file = getFile(document, fileId);
+			response.setContentType(document.getContent_type());
 			response.setHeader("Content-disposition","attachment; filename=" + document.getTitle());
 		// This should send the file to browser
 			OutputStream out = response.getOutputStream();
