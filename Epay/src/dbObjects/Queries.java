@@ -314,6 +314,24 @@ public class Queries {
 		}
 		return newId;
 	}
+	
+	public static long insertNewDocument(long invoice, String title, String description, String url) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewDocument(?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("invoice", invoice);
+		st.setString("title", title);
+		st.setString("description", description);
+		st.setString("url", url);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		return newId;
+	}
 }
 
 
