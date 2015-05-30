@@ -1,5 +1,6 @@
 package servlets;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -63,6 +64,15 @@ public class InvoiceServlet extends HttpServlet {
 		// Check that we have a file upload request
 		if (isMultipart) {
 			uploadFile(request, invoice.getIdInvoice());
+		} else if (request.getParameter("document") != null) {
+			System.out.println("TUKA");
+			if (request.getParameter("operation").equals("download")) {
+				downloadFile(Long.parseLong(request.getParameter("document")),
+						response);
+				return;
+			} else if (request.getParameter("operation").equals("delete")) {
+				deleteFile(Long.parseLong(request.getParameter("document")));
+			}
 		}
 
 		// Generate new page
@@ -130,8 +140,7 @@ public class InvoiceServlet extends HttpServlet {
 		Long sourceUser = null;
 		if (invoiceID != null) {
 			try {
-				return new Invoice((long) Double.parseDouble(invoiceID
-						.toString()));
+				return new Invoice(Long.parseLong(invoiceID.toString()));
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -206,44 +215,135 @@ public class InvoiceServlet extends HttpServlet {
 	 */
 	private void uploadFile(HttpServletRequest request, long invoice) {
 		// Check that we have a file upload request
-		folder = new File(filePath + "\\" + invoice + "\\");
+		String folderPath = filePath + invoice + "\\";
+		folder = new File(folderPath);
 		folder.mkdir();
+		String fileName = null;
+		String fileDescription = null;
 
 		Iterator<FileItem> i = fileItems.iterator();
-
+		FileItem fi = null;
 		while (i.hasNext()) {
-			FileItem fi = (FileItem) i.next();
+			fi = (FileItem) i.next();
 			if (!fi.isFormField()) {
 				// Get the uploaded file parameters
-				String fileName = fi.getName();
-				// Create new file in database
-				float fileId = 0F;
-				// Write the file
-				file = new File(filePath
-						+ "\\"
-						+ invoice
-						+ "\\"
-						+ ((long)fileId)
-						+ fileName.substring(fileName.indexOf("."),
-								fileName.length()));
-				try {
-					fi.write(file);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				fileName = fi.getName();
+				System.out.println(fi.getContentType());
 			} else {
 				if (fi.getFieldName().equals("fileDescription")) {
-					System.out.println(fi.getString());
+					fileDescription = fi.getString();
 				}
 			}
 		}
+
+		String extension = fileName.substring(fileName.indexOf("."),
+				fileName.length());
+
+		Long fileId = null;
+		/*try {
+			fileId = Queries.insertNewDocument(invoice, fileName,
+					fileDescription, folderPath + extension);
+		} catch (InstantiationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+
+		file = new File(folderPath + fileId + extension);
+		try {
+			fi.write(file);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private Float getInvoiceIdFromMultipart(HttpServletRequest request) {
+	private void downloadFile(long fileId, HttpServletResponse response) {
+		File my_file = getFile(fileId);
+		// This should send the file to browser
+		try {
+			OutputStream out = response.getOutputStream();
+			FileInputStream in = new FileInputStream(my_file);
+			byte[] buffer = new byte[4096];
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
+			}
+			in.close();
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void deleteFile(long fileId) {
+		try {
+			File fileToDelete = getFile(fileId);
+			fileToDelete.delete();
+			Queries.deleteDocument(fileId);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private File getFile(long fileId) {
+		try {
+			Document document = new Document(fileId);
+			String url = document.getUrl();
+
+			int extensionIndex = url.lastIndexOf("\\") + 1;
+			String fullPath = url.substring(0, extensionIndex) + fileId
+					+ url.substring(extensionIndex, url.length());
+			return new File(fullPath);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private Long getInvoiceIdFromMultipart(HttpServletRequest request) {
 		for (FileItem item : fileItems) {
 			if (item.isFormField()) {
 				if (item.getFieldName().equals("invoiceid"))
-					return Float.parseFloat(item.getString());
+					return Long.parseLong(item.getString());
 			}
 		}
 		return null;
