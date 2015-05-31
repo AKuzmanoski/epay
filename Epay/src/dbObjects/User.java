@@ -103,10 +103,9 @@ public class User extends Entity {
 	private void setUserByUsername(String username) throws InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call getUserDataForHomePage(?, ?)}";
+		String sql = "{call getUserDataForHomePage(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
-		st.setString("pass", pass);
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		
