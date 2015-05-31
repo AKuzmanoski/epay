@@ -89,7 +89,7 @@ public class Account extends Entity {
 	 */
 	public List<Paycheck> getSentPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call getSentPaychecksWithoutInvoice(?)}";
+		String sql = "{call paidPaychecks(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("accountid", accountId);
 		st.execute();
@@ -117,7 +117,7 @@ public class Account extends Entity {
 	 */
 	public List<Paycheck> getReceivedPaychecks() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call getReceivedPaychecksWithoutInvoice(?)}";
+		String sql = "{call receivedPaychecks(?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("accountid", accountId);
 		st.execute();
