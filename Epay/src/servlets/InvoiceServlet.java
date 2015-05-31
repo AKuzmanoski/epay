@@ -38,8 +38,8 @@ public class InvoiceServlet extends HttpServlet {
 	private boolean isMultipart;
 	private String filePath;
 	private String repoPath;
-	private int maxFileSize = 50 * 1024;
-	private int maxMemSize = 4 * 1024;
+	private int maxFileSize = 5 * 1024 * 1024;
+	private int maxMemSize = 5 * 1024 * 1024;
 	private File file;
 	private File folder;
 	List<FileItem> fileItems;

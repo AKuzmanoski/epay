@@ -77,7 +77,7 @@
 					<tr>
 						<td>Select file to upload</td>
 						<td><input type="file" class="prominent" name="file"
-							id="file" size="100" /> <img id="firstnameErr" class="err"
+							id="file" /> <img id="firstnameErr" class="err"
 							src="Images/error.png" title="Plese select file." /></td>
 					</tr>
 					<tr>
