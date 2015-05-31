@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.net.HttpCookie;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,8 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import security.PasswordHash;
 import dbObjects.Queries;
 import dbObjects.User;
 
@@ -35,13 +34,15 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			String username = req.getParameter("username");
-			String pass = req.getParameter("pass");
+			String pass = PasswordHash.createHash(req.getParameter("pass"));
 			
 
 			if(Queries.userAuthentication(username, pass)) {
-				//succesfull  
-				
 				User user = new User(username, pass);
+				//succesfull  
+				System.out.println("Hello");
+				System.out.println(user);
+				
 				Cookie cookie=new Cookie("user", Long.toString(user.getIdUser()));
 				cookie.setMaxAge(48 * 60 * 60);
 				resp.addCookie(cookie);
@@ -52,6 +53,7 @@ public class LoginServlet extends HttpServlet {
 
 			}
 			else {
+				System.out.println("No such user");
 				resp.sendRedirect("invalidLogin.jsp");
 			}
 		}
