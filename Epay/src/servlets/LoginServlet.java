@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dbObjects.Queries;
 import dbObjects.User;
 
 /**
@@ -36,11 +37,11 @@ public class LoginServlet extends HttpServlet {
 			String username = req.getParameter("username");
 			String pass = req.getParameter("pass");
 			
-			User user = new User(username, pass);
 
-			if(user.getPass().equals(pass)) {
+			if(Queries.userAuthentication(username, pass)) {
 				//succesfull  
 				
+				User user = new User(username, pass);
 				Cookie cookie=new Cookie("user", Long.toString(user.getIdUser()));
 				cookie.setMaxAge(48 * 60 * 60);
 				resp.addCookie(cookie);
