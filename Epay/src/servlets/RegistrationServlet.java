@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -110,12 +111,12 @@ public class RegistrationServlet extends HttpServlet {
 						.forward(request, response);
 				return;
 			}
-
+			
 			if (Queries.isAccountFree(accountNumber)) {//need to be changed these values [Goran]
 				Queries.insertNewAccount(accountNumber, null, null, 0, 0, bank);	
 			}
-
-			if (!Queries.isAccountNotInOwnership(accountNumber)) {
+			
+			if (!(Queries.isAccountNotInOwnership(accountNumber))) {
 				request.setAttribute("ErrorMessage",
 						"The Accaunt Number you entered is used by another user.");
 				request.getRequestDispatcher("Registration/NotRegistrated.jsp")

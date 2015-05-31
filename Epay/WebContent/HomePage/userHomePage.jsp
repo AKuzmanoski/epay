@@ -236,7 +236,7 @@
 							<tr>
 								<td>Account Number</td>
 								<td><input type="text" id="accountnumber"
-									name="accountnumber"
+									name="accountnum"
 									placeholder="Your unique Bank Account Number" /> <img
 									id="accountnumberErr" class="err" src="Images/error.png"
 									title="This field is required." /></td>

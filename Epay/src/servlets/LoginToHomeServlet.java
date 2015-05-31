@@ -75,9 +75,10 @@ public class LoginToHomeServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		if (request.getParameter("accountnumber") != null) {
+		if (request.getParameter("accountnum") != null) {
 			// Adding new account
-			addUserAccount(request, userid, response);
+			if(addUserAccount(request, userid, response))
+				return;
 		}
 
 		List<Account> accounts = null;
@@ -199,11 +200,11 @@ public class LoginToHomeServlet extends HttpServlet {
 		return userid;
 	}
 
-	private void addUserAccount(HttpServletRequest request, Long userId,
+	private boolean addUserAccount(HttpServletRequest request, Long userId,
 			HttpServletResponse response) throws IOException, ServletException {
 		DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
 
-		String accountNumber = request.getParameter("accountnumber");
+		String accountNumber = request.getParameter("accountnum");
 
 		String bank = request.getParameter("bank");
 		Date dateFrom = null;
@@ -221,6 +222,9 @@ public class LoginToHomeServlet extends HttpServlet {
 			if (Queries.isAccountFree(accountNumber)) {// need to be changed
 														// these values [Goran]
 				idAccount = Queries.insertNewAccount(accountNumber, new java.sql.Date(dateFrom.getTime()), new java.sql.Date(dateTo.getTime()), 0, 0, bank);
+			} else {
+				Account acc = new Account(accountNumber);
+				idAccount = acc.getAccountId();
 			}
 
 			if (!Queries.isAccountNotInOwnership(accountNumber)) {
@@ -228,7 +232,7 @@ public class LoginToHomeServlet extends HttpServlet {
 						"The Accaunt Number you entered is used by another user.");
 				request.getRequestDispatcher("Registration/NotRegistrated.jsp")
 						.forward(request, response);
-				return;
+				return true;
 			}
 			
 			Queries.insertNewUserAccount(userId, idAccount, new java.sql.Date(Calendar.getInstance().getTime().getTime()));
@@ -245,5 +249,6 @@ public class LoginToHomeServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
 }
