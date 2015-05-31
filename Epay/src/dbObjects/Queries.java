@@ -64,7 +64,7 @@ public class Queries {
 		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
-		st.setString("password", PasswordHash.createHash(password));
+		st.setString("password", password);
 		st.setString("fullname", fullname);
 		st.setString("email", email);
 		st.setString("contact", contact);
