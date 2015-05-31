@@ -24,6 +24,7 @@ public class Queries {
 		ResultSet resultSet = st.getResultSet();
 		resultSet.next();
 		String hashedPass = resultSet.getString("password");
+		conn.close();
 		return PasswordHash.validatePassword(enteredPass, hashedPass);
 	}
 //	
@@ -79,6 +80,7 @@ public class Queries {
 		st.execute();
 		ResultSet rs = st.getResultSet();
 		rs.next();
+		conn.close();
 		return rs.getLong("newId");
 	}
 
@@ -107,6 +109,7 @@ public class Queries {
 		while (resultSet.next()) {
 			existence = resultSet.getInt("cnt");
 		}
+		conn.close();
 		return existence == 0;
 	}
 	
@@ -140,6 +143,7 @@ public class Queries {
 			while(rs.next()) {
 				newId = rs.getLong("newId");
 			}
+			conn.close();
 			return newId;
 	}
 
@@ -164,6 +168,7 @@ public class Queries {
 		while(resultSet.next()) {
 			existence = resultSet.getInt("cnt");
 		}
+		conn.close();
 		return existence == 0;
 	}
 	
@@ -188,6 +193,7 @@ public class Queries {
 		while(resultSet.next()) {	
 			existence = resultSet.getInt("cnt");
 		}
+		conn.close();
 		return existence == 0;
 	}
 	
@@ -214,6 +220,7 @@ public class Queries {
 		while(resultSet.next()) {
 			existence = resultSet.getInt("cnt");
 		}
+		conn.close();
 		return existence == 1;
 	}
 
@@ -241,6 +248,7 @@ public class Queries {
 		while(rs.next()) {
 			newId = rs.getLong("newId");
 		}
+		conn.close();
 		return newId;
 	}
 
@@ -268,6 +276,7 @@ public class Queries {
 		while(rs.next()) {
 			newId = rs.getLong("newId");
 		}
+		conn.close();
 		return newId;
 	}
 	
@@ -286,6 +295,7 @@ public class Queries {
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("docId", docId);
 		st.execute();
+		conn.close();
 	}
 	
 	/**
@@ -307,6 +317,7 @@ public class Queries {
 		st.setString("newDesc", newDesc);
 		st.setString("newUrl", newUrl);
 		st.execute();
+		conn.close();
 	}
 	
 	public static List<User> getAllUsers() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
@@ -325,7 +336,7 @@ public class Queries {
 					resultSet.getDate("dateofbirth"), resultSet.getString("address"), 
 					resultSet.getBoolean("isindividual"), resultSet.getString("embg")));
 		}
-		
+		conn.close();
 		return allUsers;
 	}
 	
@@ -346,6 +357,7 @@ public class Queries {
 		while(rs.next()) {
 			newId = rs.getLong("newId");
 		}
+		conn.close();
 		return newId;
 	}
 	
@@ -366,6 +378,7 @@ public class Queries {
 		while(rs.next()) {
 			newId = rs.getLong("newId");
 		}
+		conn.close();
 		return newId;
 	}
 }
