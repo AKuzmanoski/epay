@@ -429,9 +429,28 @@ public class Queries {
 		conn.close();
 	}
 	
+	public static long insertNewUserAccount(long user, long account, Date date) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewUserAccountByIds(?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("user", user);
+		st.setLong("account", account);
+		st.setDate("datecreated", date);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		conn.close();
+		return newId;
+	}
+	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
-		updatePermissionsByUserDoc(1, 3, false, true, true);
-		System.out.println(new UserDocumentPermissions(1, 3));
+//		updatePermissionsByUserDoc(1, 3, false, true, true);
+//		System.out.println(new UserDocumentPermissions(1, 3));
+		System.out.println(insertNewUserAccount(1, 8, new Date(0)));
 	}
 }
 
