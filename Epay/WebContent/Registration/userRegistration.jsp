@@ -154,7 +154,7 @@
 						</tr>
 						<tr>
 							<td>Date From</td>
-							<td><input type="text" id="dateto" name="dateto" class="date" placholder="Date of Expiry" />
+							<td><input type="text" id="dateto" name="dateto" class="date" placeholder="Date of Expiry" />
 							<img id="socialsecurityErr" class="err" src="Images/error.png" title="This field is required. Please use standard date format (mm/dd/yyyy) or choose from dropdown chooser." /></td>
 						</tr>
 					</table>

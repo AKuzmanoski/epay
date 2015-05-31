@@ -76,30 +76,34 @@
 				<li><a href="#tabs-1">Overview</a></li>
 				<li><a href="#tabs-2">Invoices</a></li>
 				<li><a href="#tabs-3">Paychecks</a></li>
+				<li><a href="#tabs-4">Add Account</a>
 			</ul>
 			<div class="tabs" id="tabs-1">
-				<table>
-					<tr>
-						<td>Balance:</td>
-						<td><label class="head">${selectedAccount.getBalance()}</label></td>
-					</tr>
-					<tr>
-						<td>Limit:</td>
-						<td><label class="head">${selectedAccount.getLimit()}</label></td>
-					</tr>
-					<tr>
-						<td>Bank:</td>
-						<td><b>${selectedAccount.getBank()}</b></td>
-					</tr>
-					<tr>
-						<td>Date From:</td>
-						<td><b>${selectedAccount.getDateFrom()}</b></td>
-					</tr>
-					<tr>
-						<td>Date To:</td>
-						<td><b>${selectedAccount.getDateTo()}</b></td>
-					</tr>
-				</table>
+				<div class="panel">
+					<table>
+						<tr>
+							<td>Balance:</td>
+							<td><label class="head">${selectedAccount.getBalance()}</label></td>
+						</tr>
+						<tr>
+							<td>Limit:</td>
+							<td><label class="head">${selectedAccount.getLimit()}</label></td>
+						</tr>
+						<tr>
+							<td>Bank:</td>
+							<td><b>${selectedAccount.getBank()}</b></td>
+						</tr>
+						<tr>
+							<td>Date From:</td>
+							<td><b>${selectedAccount.getDateFrom()}</b></td>
+						</tr>
+						<tr>
+							<td>Date To:</td>
+							<td><b>${selectedAccount.getDateTo()}</b></td>
+						</tr>
+					</table>
+				</div>
+				<div style="clear: both;"></div>
 			</div>
 			<div class="tabs" id="tabs-2">
 				<div id="receivedInvoices" class="panel">
@@ -212,6 +216,56 @@
 					</form>
 				</div>
 				<div class="spacer" style="clear: both;"></div>
+			</div>
+			<div class="tabs" id="tabs-4">
+				<div id="accountInfo" class="panel">
+					<form action="LoginToHomeServlet" name="registration"
+						id="registration" method="post">
+						<table>
+							<tr>
+								<td>Bank</td>
+								<td><select id="bank" name="bank">
+										<option>Stopanska Banka AD</option>
+										<option>Tutunska Banka AD</option>
+										<option>Ohridska Banka</option>
+										<option>Halk Bank</option>
+										<option>Sparkase Bank</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td>Account Number</td>
+								<td><input type="text" id="accountnumber"
+									name="accountnumber"
+									placeholder="Your unique Bank Account Number" /> <img
+									id="accountnumberErr" class="err" src="Images/error.png"
+									title="This field is required." /></td>
+							</tr>
+							<tr>
+								<td>Date From</td>
+								<td><input type="text" id="datefrom" name="datefrom"
+									class="date" placeholder="Date of Issue" /> <img
+									id="socialsecurityErr" class="err" src="Images/error.png"
+									title="This field is required. Please use standard date format (mm/dd/yyyy) or choose from dropdown chooser." /></td>
+							</tr>
+							<tr>
+								<td>Date From</td>
+								<td><input type="text" id="dateto" name="dateto"
+									class="date" placeholder="Date of Expiry" /> <img
+									id="socialsecurityErr" class="err" src="Images/error.png"
+									title="This field is required. Please use standard date format (mm/dd/yyyy) or choose from dropdown chooser." /></td>
+							</tr>
+						</table>
+						<hr />
+						<table>
+							<tr>
+								<td></td>
+								<td class="navButtons" id="navFirst"><input type="submit"
+									name="sub" id="sub" class="prominent" value="Create Account" /></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div style="clear: both;"></div>
 			</div>
 		</div>
 	</div>
