@@ -79,6 +79,7 @@ public class RegistrationServlet extends HttpServlet {
 				dateOfBirth = df.parse(request.getParameter("dateofbirth"));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
 				dateOfBirth = null;
 			}
 		} else {
@@ -97,8 +98,7 @@ public class RegistrationServlet extends HttpServlet {
 			dateFrom = df.parse(request.getParameter("datefrom"));
 			dateTo = df.parse(request.getParameter("dateto"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		// Queries
@@ -135,16 +135,16 @@ public class RegistrationServlet extends HttpServlet {
 					response);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
-			pw.println(e.getMessage());
+			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
-			pw.println(e.getMessage());
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			pw.println(e.getMessage());
+			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			pw.println(e.getMessage());
+			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

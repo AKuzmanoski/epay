@@ -43,9 +43,6 @@ public class LoginServlet extends HttpServlet {
 			}
 			String username = usName.toString();
 			String pass = password.toString();
-			System.out.println("Login pass: " + pass);
-			pass = PasswordHash.createHash(pass);
-			System.out.println("Login hash: " + pass);
 			if(Queries.userAuthentication(username, pass)) {
 				System.out.println("Hello");
 				User user = new User(username, pass);
