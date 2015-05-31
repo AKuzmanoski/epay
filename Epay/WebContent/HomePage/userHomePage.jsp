@@ -10,6 +10,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" href="Images/logo.ico">
 <title>ePay - Home</title>
 <link type="text/css" rel="stylesheet" href="jQuery/jquery-ui.min.css"></link>
 <link type="text/css" rel="stylesheet" href="MainCSS.css"></link>
@@ -58,7 +59,14 @@
 </style>
 </head>
 <body>
-
+	<div class="header">
+		<a href="LoginToHomeServlet"><img src="Images/logo.png" /></a>
+		<div id="logoutForm">
+			<form action="LogoutServlet">
+				<input type="submit" value="Log Out" class="prom" />
+			</form>
+		</div>
+	</div>
 	<div class="content">
 		User
 		<c:out value="${userFullName}"></c:out>

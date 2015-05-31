@@ -14,6 +14,7 @@
 <link type="text/css" rel="stylesheet" href="Invoice/Invoice.css"></link>
 <link type="text/css" rel="stylesheet" href="MainCSS.css"></link>
 <link type="text/css" rel="stylesheet" href="jQuery/jquery-ui.min.css"></link>
+<link rel="shortcut icon" href="Images/logo.ico">
 
 <script type="text/javascript" src="jQuery/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="jQuery/jquery-ui.min.js"></script>
@@ -21,6 +22,14 @@
 <script type="text/javascript" src="MainJavaScript.js"></script>
 </head>
 <body>
+	<div class="header">
+		<a href="LoginToHomeServlet"><img src="Images/logo.png" /></a>
+		<div id="logoutForm">
+			<form action="LogoutServlet">
+				<input type="submit" value="Log Out" class="prom" />
+			</form>
+		</div>
+	</div>
 	<div id="invoiceHeader">
 		<div id="senderInfo" class="info">
 			Issuer: <b>${senderName}</b><br /> Address: <b>${senderAddress}</b><br />

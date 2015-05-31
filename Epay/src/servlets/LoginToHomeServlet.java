@@ -100,7 +100,9 @@ public class LoginToHomeServlet extends HttpServlet {
 					.toString();
 		} else {
 			id = accounts.get(0).getAccountId() + "";
+			request.getSession().setAttribute("selectedAccount", id);
 		}
+		request.getSession().setMaxInactiveInterval(10000);
 
 		try {
 			selectedAccount = new Account(Long.parseLong(id));

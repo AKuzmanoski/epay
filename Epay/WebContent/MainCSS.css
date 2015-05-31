@@ -13,3 +13,22 @@
 .isPaid {
 	float: right;
 }
+
+.header {
+	background-color: #444499;
+	border-radius: 10px;
+	-webkit-box-shadow: 6px 7px 44px -5px rgba(0,0,0,0.77);
+	-moz-box-shadow: 6px 7px 44px -5px rgba(0,0,0,0.77);
+	box-shadow: 6px 7px 44px -5px rgba(0,0,0,0.77);
+	margin-bottom: 30px;
+}
+
+#logoutForm {
+	float: right;
+	display: inline-block;
+	height: 100%;
+	vertical-align: center;
+	padding-top: 20px;
+	padding-right: 20px;
+	font-width: bold;
+}
