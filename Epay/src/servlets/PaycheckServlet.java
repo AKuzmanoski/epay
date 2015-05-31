@@ -81,6 +81,7 @@ public class PaycheckServlet extends HttpServlet {
 	    String idString=request.getParameter("paycheckSelected");
 	    request.setAttribute("createNew", "false");
 	    request.setAttribute("createdPaycheckVisible", "visibility:hidden");
+	    request.setAttribute("OKbuttonVisible", "visibility:hidden");
 	    
 	    if(request.getParameter("paycheckSelected")!=null){
 	    	System.out.println("Scenario 1");
@@ -141,10 +142,12 @@ public class PaycheckServlet extends HttpServlet {
 	    	
 	    }else if(request.getParameter("accountFrom")!=null && request.getParameter("accountTo")!=null){
 	    	System.out.println("Scenario 2");
+	    	 request.setAttribute("OKbuttonVisible", "visibility:hidden");
 	    	// znaci doagja od invoice i treba da se kreira nova uplatnica i da se dodade vo baza i da se vrati na fakturata so dadeno id
 	    	//+da se dodade i invoice paycheck !!!
 	    	long accountFromId=Long.parseLong(request.getParameter("accountFrom").toString());
 	    	long accountToId=Long.parseLong(request.getParameter("accountTo").toString());
+	    	
 	    	
 	    	try {
 				accountFrom=new Account(accountFromId);
@@ -185,14 +188,18 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("receiverBank", accountTo.getBank());
 	    	request.setAttribute("receiverAccount", accountTo.getCardNumber());
 
-	    	request.setAttribute("buttonVisible", "visibility:hidden");
-	    	
+	    	request.setAttribute("buttonVisible", "");
+	    	request.setAttribute("createInvoice", "true");
+	    	long invoiceid=Long.parseLong(request.getParameter("invoiceid"));
+	    	request.setAttribute("invoiceid", invoiceid);
 	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 			dispatcher.forward(request, response);
-	
-	    }else if(request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true")){
+        	
+	    }else if((request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true"))|| 
+	    		(request.getParameter("createInvoice")!=null && request.getParameter("createInvoice").equals("true"))){
+	    	
 	    	//kreirame nova uplatnica
-	    	System.out.println("scenario 3");
+	    	System.out.println("scenario 4");
 	    	
 	    	String applicantName = request.getParameter("applicantName");
 			String applicantAddress = request.getParameter("applicantAddress");
@@ -241,8 +248,9 @@ public class PaycheckServlet extends HttpServlet {
 			}
 			System.out.println(appAccount.getAccountId());
 			System.out.println(recAccount.getAccountId());
+			long newPaycheckId=-1;
 			try {
-				Queries.insertNewPaycheck(appAccount.getAccountId(), recAccount.getAccountId(), Double.parseDouble(amount), description, receiverName);
+				newPaycheckId=Queries.insertNewPaycheck(appAccount.getAccountId(), recAccount.getAccountId(), Double.parseDouble(amount), description, receiverName);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -260,15 +268,42 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("receiverName", receiverName);
 	    	request.setAttribute("receiverBank", receiverBank);
 	    	request.setAttribute("receiverAccount", receiverAccount);
-
-	    	request.setAttribute("buttonVisible", "visibility:hidden");
+	    	
+	    	if((request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true"))){
+	    		request.setAttribute("createInvoice", "false");
+	    		request.setAttribute("backDestination", "Home/userHomePage");
+	    	
+	    	}else{
+	    		//ako e invoice
+	    		long invoiceid=Long.parseLong(request.getParameter("invoiceId").toString());
+	    		Paycheck created=null;
+	    		try {
+					created=new Paycheck(newPaycheckId);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
+	    		created.setPaid(false);
+	    		try {
+					Queries.insertNewInvoicePaycheck(invoiceid, newPaycheckId);
+				} catch (Exception e) {
+					// TODO Auto-generated catch blockz
+					System.out.println("Cannot insert new invoice paycheck");
+					e.printStackTrace();
+				} 
+	    		request.setAttribute("createNew", "false");
+	    		request.setAttribute("backDestination", "InvoiceServlet");
+	    		request.setAttribute("invoiceid", invoiceid);
+	    	}
 	    	request.setAttribute("createdPaycheckVisible", "");
+	    	
+	    	request.setAttribute("buttonVisible", "visibility:hidden");
 	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 			dispatcher.forward(request, response);
 	    }
 	    else{
 	    	//kreiranje na celosno nova uplatnica (popolneti se samo podatocite za userot)
-	    	System.out.println("Scenario 4");
+	    	System.out.println("Scenario 5");
 	    	Account selectedAccount=null;
 	    	Long accId=Long.parseLong(request.getParameter("selectedAccount"));
 	    	
