@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import security.PasswordHash;
 import dbObjects.Queries;
 
 /**
@@ -54,7 +55,16 @@ public class RegistrationServlet extends HttpServlet {
 
 		String userName = request.getParameter("username");
 		String accountNumber = request.getParameter("accountnumber");
-		String password = request.getParameter("password");
+		String password = null;
+		try {
+			password = PasswordHash.createHash(request.getParameter("password"));
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InvalidKeySpecException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		String isIndividual = request.getParameter("isIndividual");
 		String fullName = null;
 		String socialSecurity = null;
@@ -86,7 +96,7 @@ public class RegistrationServlet extends HttpServlet {
 			dateTo = df.parse(request.getParameter("dateto"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		// Queries
@@ -116,7 +126,8 @@ public class RegistrationServlet extends HttpServlet {
 					contactNumber, new java.sql.Date(dateOfBirth.getTime()),
 					address, isIndividual.equals("individual"), socialSecurity,
 					accountNumber, balance, limit, bank);
-
+			System.out.println("New user:");
+			System.out.println(password.length());
 			// LoginToHome
 			request.setAttribute("username", userName);
 			request.setAttribute("password", password);
