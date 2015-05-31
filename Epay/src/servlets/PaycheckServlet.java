@@ -75,8 +75,26 @@ public class PaycheckServlet extends HttpServlet {
 		long selectedAccountId=1;
 		if(request.getParameter("selectedAccount")!=null){
 		 selectedAccountId=Long.parseLong(request.getParameter("selectedAccount"));
-		}else{
+		}else if(request.getSession().getAttribute("selectedAccount")!=null){
 			 selectedAccountId=Long.parseLong(request.getSession().getAttribute("selectedAccount").toString());
+		}else{
+			Account account=null;
+			try {
+				account = user.getCompleteAccounts().get(0);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			selectedAccountId=account.getAccountId();
 		}
 		
 		System.out.println("Logged user "+user.getFullName());
@@ -176,10 +194,45 @@ public class PaycheckServlet extends HttpServlet {
     	    if(isSuccessfull){
     	    	request.setAttribute("PaidPaycheckVisible", ""); 
     	    }
-    	    request.setAttribute("backDestination", "InvoiceServlet");
+    	    
+    	    String applicantName = request.getParameter("applicantName");
+			String applicantAddress = request.getParameter("applicantAddress");
+			String applicantBank = request.getParameter("applicantBank");
+			String applicantAccount = request.getParameter("applicantAccount");
+			String applicantSS=request.getParameter("applicantSS");
+			String description=request.getParameter("description");
+			
+			String receiverName = request.getParameter("receiverName");
+			String receiverBank = request.getParameter("receiverBank");
+			String receiverAccount = request.getParameter("receiverAccount");
+			String amount=request.getParameter("amount");
+			
+    	    request.setAttribute("applicantName", applicantName);
+	    	request.setAttribute("applicantAddress", applicantAddress);
+	    	request.setAttribute("applicantBank", applicantBank);
+	    	request.setAttribute("applicantAccount", applicantAccount);
+	    	request.setAttribute("applicantEmbg", applicantSS);
+	    	
+	    	request.setAttribute("description", description);
+	    	request.setAttribute("amount", amount);
+	    	request.setAttribute("receiverName", receiverName);
+	    	request.setAttribute("receiverBank", receiverBank);
+	    	request.setAttribute("receiverAccount", receiverAccount);
+	    	
     		request.setAttribute("OKbuttonVisible", "");
-    		long invoiceid=Long.parseLong(request.getParameter("invoiceid"));
+    		long invoiceid=-1;
+    		if(request.getAttribute("invoiceid")!=null){
+    		 invoiceid=Long.parseLong(request.getAttribute("invoiceid").toString());
     		request.setAttribute("invoiceid", invoiceid);
+    		}else if(request.getParameter("invoiceid")!=null){
+    			 invoiceid=Long.parseLong(request.getParameter("invoiceid").toString());
+        		request.setAttribute("invoiceid", invoiceid);
+    		}
+    		if(invoiceid==-1){
+    			request.setAttribute("backDestination", "LoginToHomeServlet");
+    		}else{
+    		request.setAttribute("backDestination", "InvoiceServlet");
+    		}
     	    RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 		    dispatcher.forward(request, response);
 	    }
@@ -234,6 +287,7 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("buttonVisible", "");
 	    	request.setAttribute("createInvoice", "true");
 	    	long invoiceid=Long.parseLong(request.getParameter("invoiceid"));
+	    	System.out.println("invoice id !!! "+invoiceid);
 	    	request.setAttribute("invoiceid", invoiceid);
 	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 			dispatcher.forward(request, response);
@@ -314,7 +368,8 @@ public class PaycheckServlet extends HttpServlet {
 	    	
 	    	if((request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true"))){
 	    		request.setAttribute("createInvoice", "false");
-	    		request.setAttribute("backDestination", "Home/userHomePage");
+	    		request.setAttribute("backDestination", "LoginToHomeServlet");
+	    		request.setAttribute("OKbuttonVisible", "");
 	    	
 	    	}else{
 	    		//ako e invoice
@@ -327,6 +382,7 @@ public class PaycheckServlet extends HttpServlet {
 					e1.printStackTrace();
 				} 
 	    		created.setPaid(false);
+	    		System.out.println("najnovo - invoice - paycheck "+invoiceid+" "+newPaycheckId);
 	    		try {
 					Queries.insertNewInvoicePaycheck(invoiceid, newPaycheckId);
 				} catch (Exception e) {
@@ -366,6 +422,8 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("applicantAccount", selectedAccount.getCardNumber());
 	    	request.setAttribute("applicantEmbg", user.getEmbg());
 	    	request.setAttribute("createNew", "true");
+	    	request.setAttribute("backDestination", "LoginToHomeServlet");
+    		//request.setAttribute("OKbuttonVisible", "");
 	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 			dispatcher.forward(request, response);
 	    	
