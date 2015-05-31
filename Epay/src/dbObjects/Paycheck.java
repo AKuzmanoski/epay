@@ -26,6 +26,23 @@ public class Paycheck extends Entity {
 		this.receiverName = receiverName;
 		this.isPaid = false;
 	}
+	
+	
+
+	public Paycheck(long idPaycheck, long accountFrom, long accountTo,
+			double amount, String description, String receiverName,
+			boolean isPaid) {
+		super();
+		this.idPaycheck = idPaycheck;
+		this.accountFrom = accountFrom;
+		this.accountTo = accountTo;
+		this.amount = amount;
+		this.description = description;
+		this.receiverName = receiverName;
+		this.isPaid = isPaid;
+	}
+
+
 
 	public Paycheck(long idPaycheck) throws InstantiationException,
 			IllegalAccessException, ClassNotFoundException, SQLException,
@@ -51,13 +68,15 @@ public class Paycheck extends Entity {
 			amount = resultSet.getDouble("amount");
 			description = resultSet.getString("description");
 			receiverName = resultSet.getString("receiverName");
+			isPaid = resultSet.getBoolean("isPaid");
 		}
 		conn.close();
 	}
 	
 	@Override
 	public String toString() {
-		return idPaycheck + "\t" + accountFrom + "\t" + accountTo + "\t" + amount;
+		return idPaycheck + "\t" + accountFrom + "\t" + accountTo + "\t" + amount + 
+				"\t" + description + "\t" + receiverName + "\t" + isPaid;
 	}
 
 	public long getIdPaycheck() {
@@ -116,5 +135,9 @@ public class Paycheck extends Entity {
 		this.isPaid = isPaid;
 	}
 
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Paycheck p = new Paycheck(10);
+		System.out.println(p);
+	}
 	
 }
