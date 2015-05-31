@@ -34,10 +34,11 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			String username = req.getParameter("username");
-			String pass = PasswordHash.createHash(req.getParameter("pass"));
+			String pass = req.getParameter("pass");
 			
 
 			if(Queries.userAuthentication(username, pass)) {
+				pass = PasswordHash.createHash(pass);
 				User user = new User(username, pass);
 				//succesfull  
 				System.out.println("Hello");
