@@ -1,7 +1,13 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import security.PasswordHash;
 //import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import dbObjects.Account;
 import dbObjects.Invoice;
@@ -67,6 +74,11 @@ public class LoginToHomeServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
+		if (request.getParameter("accountnumber") != null) {
+			// Adding new account
+			addUserAccount(request, userid, response);
+		}
+
 		List<Account> accounts = null;
 		try {
 			accounts = user.getCompleteAccounts();
@@ -82,7 +94,8 @@ public class LoginToHomeServlet extends HttpServlet {
 			id = request.getParameter("dropdown");
 			request.getSession().setAttribute("selectedAccount", id);
 		} else if (request.getSession().getAttribute("selectedAccount") != null) {
-			id = request.getSession().getAttribute("selectedAccount").toString();
+			id = request.getSession().getAttribute("selectedAccount")
+					.toString();
 		} else {
 			id = accounts.get(0).getAccountId() + "";
 		}
@@ -183,5 +196,54 @@ public class LoginToHomeServlet extends HttpServlet {
 		if (userid == -1)
 			response.sendRedirect("loginPage.jsp");
 		return userid;
+	}
+
+	private void addUserAccount(HttpServletRequest request, Long userId,
+			HttpServletResponse response) throws IOException, ServletException {
+		DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+
+		String accountNumber = request.getParameter("accountnumber");
+
+		String bank = request.getParameter("bank");
+		Date dateFrom = null;
+		Date dateTo = null;
+		try {
+			dateFrom = df.parse(request.getParameter("datefrom"));
+			dateTo = df.parse(request.getParameter("dateto"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		long idAccount = -1;
+		// Queries
+		try {
+
+			if (Queries.isAccountFree(accountNumber)) {// need to be changed
+														// these values [Goran]
+				idAccount = Queries.insertNewAccount(accountNumber, new java.sql.Date(dateFrom.getTime()), new java.sql.Date(dateTo.getTime()), 0, 0, bank);
+			}
+
+			if (!Queries.isAccountNotInOwnership(accountNumber)) {
+				request.setAttribute("ErrorMessage",
+						"The Accaunt Number you entered is used by another user.");
+				request.getRequestDispatcher("Registration/NotRegistrated.jsp")
+						.forward(request, response);
+				return;
+			}
+			
+			
+			
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -7,6 +7,6 @@
 <title>ePay - Not Registrated</title>
 </head>
 <body>
-
+	<h3 style="text-align: center">${ErrorMessage}</h3>
 </body>
 </html>
