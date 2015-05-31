@@ -149,20 +149,17 @@ public class Account extends Entity {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public boolean tryToPay(long accountTo, double amount, String description, String receiverName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+	public boolean tryToPay(long id) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
-		String sql = "{call paying(?, ?, ?, ?, ?)}";
+		String sql = "{call paying(?)}";
 		CallableStatement st = conn.prepareCall(sql);
-		st.setLong("accFrom", accountId);
-		st.setLong("accTo", accountTo);
-		st.setDouble("amount", amount);
-		st.setString("description", description);
-		st.setString("receiverName", receiverName);
+		st.setLong("id", id);
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		resultSet.next();
+		boolean ok =  resultSet.getInt("isSuccesful") == 1;
 		conn.close();
-		return resultSet.getInt("isSuccesful") == 1;
+		return ok;
 	}
 	
 	public User accountOwner() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
@@ -241,8 +238,5 @@ public class Account extends Entity {
 	public void setBank(String bank) {
 		this.bank = bank;
 	}
-	
-	
-	
 	
 }
