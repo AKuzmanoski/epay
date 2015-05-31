@@ -90,8 +90,13 @@ align:middle;
 		  <input type="hidden" id="createNew" name="createNew" value="${createNew}">
 		  <label style="${createdPaycheckVisible}">Your paycheck has been created</label>
 		  <input id="btnPay" type="submit" value="CREATE"  style="${buttonVisible}"/>  
+		  <input type="hidden" name="invoiceId" value="${invoiceid}">
 		</div>
 		
+		</form>
+		<form action="${backDestination}" method=post>
+		    <input type="hidden" name="invoiceid" value="${invoiceid}">
+			<input type="submit" style="${OKbuttonVisible} value="OK">
 		</form>
 	</div>
 </body>

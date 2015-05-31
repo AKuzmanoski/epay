@@ -15,6 +15,18 @@ import security.PasswordHash;
 
 public class Queries {
 	
+	public static boolean userAuthentication(String username, String enteredPass) throws NoSuchAlgorithmException, InvalidKeySpecException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call getHashedPasswordForUser(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setString("username", username);
+		st.execute();
+		ResultSet resultSet = st.getResultSet();
+		resultSet.next();
+		String hashedPass = resultSet.getString("password");
+		return PasswordHash.validatePassword(enteredPass, hashedPass);
+	}
+//	
 //	in username varchar(45),
 //	in password varchar(45),
 //	in fullname varchar(200),
@@ -45,11 +57,11 @@ public class Queries {
 	 * @throws InvalidKeySpecException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public static void insertNewUser(String username, String password, String fullname,
+	public static long insertNewUser(String username, String password, String fullname,
 		String email, String contact, Date dateOfBirth, String address, boolean isIndividual, String embg,
-		String cardnum) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		String cardnum, double balance, double limit, String bank) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		Connection conn = Holder.getConnection();
-		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+		String sql = "{call insertNewUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setString("username", username);
 		st.setString("password", PasswordHash.createHash(password));
@@ -61,7 +73,13 @@ public class Queries {
 		st.setBoolean("isindividual", isIndividual);
 		st.setString("embg", embg);
 		st.setString("cardnumber", cardnum);
+		st.setDouble("balance", balance);
+		st.setDouble("lim", limit);
+		st.setString("bank", bank);
 		st.execute();
+		ResultSet rs = st.getResultSet();
+		rs.next();
+		return rs.getLong("newId");
 	}
 
 	
