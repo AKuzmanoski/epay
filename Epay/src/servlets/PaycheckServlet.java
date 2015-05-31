@@ -72,6 +72,13 @@ public class PaycheckServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		long selectedAccountId=1;
+		if(request.getParameter("selectedAccount")!=null){
+		 selectedAccountId=Long.parseLong(request.getParameter("selectedAccount"));
+		}else{
+			 selectedAccountId=Long.parseLong(request.getSession().getAttribute("selectedAccount").toString());
+		}
+		
 		System.out.println("Logged user "+user.getFullName());
 	    Paycheck paycheck=null;
 	    Invoice invoice=null;
@@ -148,15 +155,27 @@ public class PaycheckServlet extends HttpServlet {
 	    }else if(request.getParameter("payingMode")!=null && request.getParameter("payingMode").equals("true")){
 	    	System.out.println("plakjanje");
 	    	request.setAttribute("PayButtonVisible", "visibility:hidden");  
-	    	request.setAttribute("PaidPaycheckVisible", ""); 
+	    	
 	    	
 	    	long idP=Long.parseLong(request.getParameter("paycheckSelectedPay"));
-    	    try {
-				Paycheck paycheckToPay=new Paycheck(idP);
+    	    Account account=null;
+			try {
+				account = new Account(selectedAccountId);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
+			boolean isSuccessfull=false;
+    	    try {
+				isSuccessfull=account.tryToPay(idP);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("neuspesno plakjanje");
+			} 
+    	    if(isSuccessfull){
+    	    	request.setAttribute("PaidPaycheckVisible", ""); 
+    	    }
     	    request.setAttribute("backDestination", "InvoiceServlet");
     		request.setAttribute("OKbuttonVisible", "");
     		long invoiceid=Long.parseLong(request.getParameter("invoiceid"));
@@ -331,10 +350,10 @@ public class PaycheckServlet extends HttpServlet {
 	    	//kreiranje na celosno nova uplatnica (popolneti se samo podatocite za userot)
 	    	System.out.println("Scenario 5");
 	    	Account selectedAccount=null;
-	    	Long accId=Long.parseLong(request.getParameter("selectedAccount"));
+	    	//Long accId=Long.parseLong(request.getParameter("selectedAccount"));
 	    	
 	    	try {
-				selectedAccount=new Account(accId);
+				selectedAccount=new Account(selectedAccountId);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
