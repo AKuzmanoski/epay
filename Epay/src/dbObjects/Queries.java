@@ -383,6 +383,56 @@ public class Queries {
 		conn.close();
 		return newId;
 	}
+	
+	public static long insertNewUserDocumentPermissions(long user, long doc, boolean r, boolean w, boolean x) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call insertNewUserDocumentPermissions(?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("user", user);
+		st.setLong("doc", doc);
+		st.setBoolean("r", r);
+		st.setBoolean("w", w);
+		st.setBoolean("x", x);
+		st.execute();
+		
+		ResultSet rs = st.getResultSet();
+		long newId = 0;
+		while(rs.next()) {
+			newId = rs.getLong("newId");
+		}
+		conn.close();
+		return newId;
+	}
+	
+	public static void updatePermissionById(long id, boolean r, boolean w, boolean x) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call updatePermissionsById(?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("id", id);
+		st.setBoolean("r", r);
+		st.setBoolean("w", w);
+		st.setBoolean("x", x);
+		st.execute();
+		conn.close();
+	}
+	
+	public static void updatePermissionsByUserDoc(long user, long doc, boolean r, boolean w, boolean x) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		Connection conn = Holder.getConnection();
+		String sql = "{call updatePermissionsByUserDoc(?, ?, ?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("user", user);
+		st.setLong("doc", doc);
+		st.setBoolean("r", r);
+		st.setBoolean("w", w);
+		st.setBoolean("x", x);
+		st.execute();
+		conn.close();
+	}
+	
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		updatePermissionsByUserDoc(1, 3, false, true, true);
+		System.out.println(new UserDocumentPermissions(1, 3));
+	}
 }
 
 
