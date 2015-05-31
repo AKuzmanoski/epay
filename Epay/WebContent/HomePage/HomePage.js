@@ -15,6 +15,16 @@ $(document).ready(function() {
 		$("#sentIdPaycheck").val($(this).attr("id"));
 		$("#paycheckSentForm").submit();
 	});
+	
+	$("#receivedListInvoices li").click(function() {
+		$("#receivedIdInvoice").val($(this).attr("id"));
+		$("#invoiceReceivedForm").submit();
+	});
+	
+	$("#sentListInvoices li").click(function() {
+		$("#sentIdInvoice").val($(this).attr("id"));
+		$("#invoiceSentForm").submit();
+	});
 
 	$("input[type=button].prominent, input[type=submit].prominent").button();
 

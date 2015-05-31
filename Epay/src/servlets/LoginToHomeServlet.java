@@ -172,8 +172,7 @@ public class LoginToHomeServlet extends HttpServlet {
 		    request.setAttribute("receivedPaychecks", receivedPaychecks);
 		    request.setAttribute("sentInvoices", sentInvoices);
 		    request.setAttribute("receivedInvoices", receivedInvoices);
-		    request.setAttribute("balance", selectedAccount.getBalance());
-		    request.setAttribute("limit", selectedAccount.getLimit());
+		    request.setAttribute("selectedAccount", selectedAccount);
 		    System.out.println("sending");
 		    RequestDispatcher dispatcher=request.getRequestDispatcher("HomePage/userHomePage.jsp");
 		    dispatcher.forward(request, response);

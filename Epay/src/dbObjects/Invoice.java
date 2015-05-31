@@ -112,5 +112,29 @@ public class Invoice extends Entity {
 		this.receiver = receiver;
 	}
 	
-	
+	public double getAmount() {
+		double amount = 0;
+		try {
+			List<Paycheck> paychecks = getPaychecks();
+			for(Paycheck paycheck : paychecks)
+				amount += paycheck.getAmount();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return amount;
+	}
 }
