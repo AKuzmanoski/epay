@@ -6,6 +6,8 @@ $(document).ready(function() {
 	$(".date").datepicker({
 		altField : "#actualDate"
 	});
+	
+	$("#dropdown").val($("#selectedAcc").val());
 
 	$(".selectable li").button();
 

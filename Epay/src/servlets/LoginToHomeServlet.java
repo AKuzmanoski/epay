@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -230,7 +231,7 @@ public class LoginToHomeServlet extends HttpServlet {
 				return;
 			}
 			
-			
+			Queries.insertNewUserAccount(userId, idAccount, new java.sql.Date(Calendar.getInstance().getTime().getTime()));
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

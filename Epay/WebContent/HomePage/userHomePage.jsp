@@ -64,6 +64,7 @@
 		<c:out value="${userFullName}"></c:out>
 
 		<br /> Select your account:
+		<input type="hidden" id="selectedAcc" value="${selectedAccount.getAccountId()}" />
 		<form id="dropdownform" action="LoginToHomeServlet" method="post">
 			<select id="dropdown" name="dropdown">
 				<c:forEach var="entry" items="${accounts}">
