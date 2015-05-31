@@ -143,6 +143,52 @@ public class PaycheckServlet extends HttpServlet {
 	    	System.out.println("Scenario 2");
 	    	// znaci doagja od invoice i treba da se kreira nova uplatnica i da se dodade vo baza i da se vrati na fakturata so dadeno id
 	    	//+da se dodade i invoice paycheck !!!
+	    	long accountFromId=Long.parseLong(request.getParameter("accountFrom").toString());
+	    	long accountToId=Long.parseLong(request.getParameter("accountTo").toString());
+	    	
+	    	try {
+				accountFrom=new Account(accountFromId);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	    	try {
+				accountTo=new Account(accountToId);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	    	try {
+				applicant=accountFrom.accountOwner();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	    	try {
+				receiver=accountTo.accountOwner();
+			}  catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	    	
+	    	request.setAttribute("applicantName", applicant.getFullName());
+	    	request.setAttribute("applicantAddress", applicant.getAddress());
+	    	request.setAttribute("applicantBank", accountFrom.getBank());
+	    	request.setAttribute("applicantAccount", accountFrom.getCardNumber());
+	    	request.setAttribute("applicantEmbg", applicant.getEmbg());
+	    	
+	    
+	    	request.setAttribute("receiverName", receiver.getFullName());
+	    	request.setAttribute("receiverBank", accountTo.getBank());
+	    	request.setAttribute("receiverAccount", accountTo.getCardNumber());
+
+	    	request.setAttribute("buttonVisible", "visibility:hidden");
+	    	
+	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
+			dispatcher.forward(request, response);
 	
 	    }else if(request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true")){
 	    	//kreirame nova uplatnica
