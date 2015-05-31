@@ -84,11 +84,10 @@ public class User extends Entity {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public User(String userName, String pass) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+	public User(String userName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		super();
 		this.userName = userName;
-		this.pass = pass;
-		setUserByUsernameAndPass(userName, pass);
+		setUserByUsername(userName);
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class User extends Entity {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	private void setUserByUsernameAndPass(String username, String pass) throws InstantiationException, 
+	private void setUserByUsername(String username) throws InstantiationException, 
 	IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = getConnection();
 		String sql = "{call getUserDataForHomePage(?, ?)}";
@@ -113,6 +112,7 @@ public class User extends Entity {
 		
 		while(resultSet.next()) {
 			idUser = resultSet.getInt("idUser");
+			pass = resultSet.getString("password");
 			fullName = resultSet.getString("fullName");
 			email = resultSet.getString("email");
 			contact = resultSet.getString("contact");

@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 			String pass = password.toString();
 			if(Queries.userAuthentication(username, pass)) {
 				System.out.println("Hello");
-				User user = new User(username, pass);
+				User user = new User(username);
 				System.out.println("wow");
 				//succesfull  
 				System.out.println("Hello");
