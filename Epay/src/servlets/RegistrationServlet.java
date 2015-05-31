@@ -111,10 +111,11 @@ public class RegistrationServlet extends HttpServlet {
 				return;
 			}
 
+			int balance = 0, limit = 0;
 			Queries.insertNewUser(userName, password, fullName, email,
 					contactNumber, new java.sql.Date(dateOfBirth.getTime()),
 					address, isIndividual.equals("individual"), socialSecurity,
-					accountNumber);
+					accountNumber, balance, limit, bank);
 
 			// LoginToHome
 			request.setAttribute("username", userName);
