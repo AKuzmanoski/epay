@@ -231,7 +231,6 @@ public class LoginToHomeServlet extends HttpServlet {
 			}
 			
 			
-			
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
