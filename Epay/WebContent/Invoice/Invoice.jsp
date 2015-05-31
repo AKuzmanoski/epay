@@ -12,23 +12,22 @@
 <title>ePay - Income</title>
 
 <link type="text/css" rel="stylesheet" href="Invoice/Invoice.css"></link>
+<link type="text/css" rel="stylesheet" href="MainCSS.css"></link>
 <link type="text/css" rel="stylesheet" href="jQuery/jquery-ui.min.css"></link>
 
 <script type="text/javascript" src="jQuery/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="jQuery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="Invoice/Invoice.js"></script>
+<script type="text/javascript" src="MainJavaScript.js"></script>
 </head>
 <body>
 	<div id="invoiceHeader">
 		<div id="senderInfo" class="info">
-			Issuer: <b>${senderName}</b><br />
-			Address: <b>${senderAddress}</b><br />
-			Address: <b>${senderContact}</b><br />
-			Address: <b>${senderEmail}</b>
+			Issuer: <b>${senderName}</b><br /> Address: <b>${senderAddress}</b><br />
+			Address: <b>${senderContact}</b><br /> Address: <b>${senderEmail}</b>
 		</div>
 		<div id="recieverInfo" class="info">
-			Reciever: <b>${recieverName}</b><br />
-			Address: <b>${recieverAddress}</b>
+			Reciever: <b>${recieverName}</b><br /> Address: <b>${recieverAddress}</b>
 		</div>
 	</div>
 	<hr />
@@ -38,10 +37,9 @@
 			<form id="documentListForm" action="InvoiceServlet" method="post"
 				target="_blank">
 				<input type="text" class="viewState" name="invoiceid"
-					value="${invoiceid}" /> 
-				<input type="text" class="viewState"
-					id="document" name="document" value="${invoiceid}" /> 
-				<input type="text" class="viewState" id="operation" name="operation" />
+					value="${invoiceid}" /> <input type="text" class="viewState"
+					id="document" name="document" value="${invoiceid}" /> <input
+					type="text" class="viewState" id="operation" name="operation" />
 				<ul id="listDocuments" class="lists">
 					<c:forEach items="${documents}" var="entry">
 						<li id="${entry.getIdDocument()}" class="ui-widget-content"
@@ -87,15 +85,17 @@
 			<h3>Paychecks:</h3>
 			<form id="patcheckListForm" action="PaycheckServlet" method="post">
 				<input type="text" class="viewState" name="invoiceid"
-					value="${invoiceid}" /> <input id="idpaycheck"
-					class="viewState" type="hidden" name="paycheckSelected" />
+					value="${invoiceid}" /> <input id="idpaycheck" class="viewState"
+					type="hidden" name="paycheckSelected" />
 				<ul id="listPaychecks" class="selectable lists">
 					<c:forEach items="${paychecks}" var="entry">
 						<li id="${entry.getIdPaycheck()}" class="ui-widget-content"
-							type="paycheckSent"><img src="Images/paycheck.png"
-							alt="Document icon" height="30px" /> <br /> <label
-							class="title">${entry.getDescription()}</label> <br /> <label
-							class="title">Amount: </label> <label class="description">${entry.getAmount()}</label>
+							type="paycheckSent"><img class="floats"
+							src="Images/paid.png" alt="isPaid icon" /></img> <img
+							class="floats isPaid" ispaid="${entry.isPaid()}" src="Images/paid.png" alt="isPaid icon" />
+							<img src="Images/paycheck.png" alt="Document icon" height="30px" />
+							<br /> <label class="title">${entry.getDescription()}</label> <br />
+							<label class="title">Amount: </label> <label class="description">${entry.getAmount()}</label>
 						</li>
 					</c:forEach>
 				</ul>

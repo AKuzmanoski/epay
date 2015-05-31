@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+
+.floats {
+	visibility: hidden;
+	width: 100px;
+	float: left;
+	margin-top: auto;
+	margin-bottom: auto;
+	display: block;
+}
+
+.isPaid {
+	float: right;
+}

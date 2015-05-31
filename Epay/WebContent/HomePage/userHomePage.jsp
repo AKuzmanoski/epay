@@ -12,11 +12,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>ePay - Home</title>
 <link type="text/css" rel="stylesheet" href="jQuery/jquery-ui.min.css"></link>
+<link type="text/css" rel="stylesheet" href="MainCSS.css"></link>
 <link type="text/css" rel="stylesheet" href="HomePage/HomePage.css"></link>
 
 <script type="text/javascript" src="jQuery/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="jQuery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="HomePage/HomePage.js"></script>
+<script type="text/javascript" src="MainJavaScript.js"></script>
 
 <style>
 #feedback {
@@ -65,7 +67,7 @@
 		<form id="dropdownform" action="LoginToHomeServlet" method="post">
 			<select id="dropdown" name="dropdown">
 				<c:forEach var="entry" items="${accounts}">
-					<option value="${entry.key}">${entry.value}</option>
+					<option value="${entry.getAccountId()}">${entry.getCardNumber()}</option>
 				</c:forEach>
 			</select>
 		</form>
@@ -109,6 +111,9 @@
 						<ul id="receivedListInvoices" class="selectable lists">
 							<c:forEach items="${receivedInvoices}" var="entry">
 								<li id="${entry.getIdInvoice()}" class="ui-widget-content"><img
+									class="floats" src="Images/paid.png" alt="isPaid icon" /></img> <img
+									class="floats isPaid" ispaid="${entry.isPaid()}"
+									src="Images/paid.png" alt="isPaid icon" /><img
 									src="Images/invoice.png" alt="Invoice icon" height="30px" /> <br />
 									<label class="title">${entry.getIdInvoice()}</label> <br /> <label
 									class="title">Amount: </label> <label class="description">${entry.getAmount()}</label>
@@ -125,6 +130,9 @@
 						<ul id="sentListInvoices" class="selectable lists">
 							<c:forEach items="${sentInvoices}" var="entry">
 								<li id="${entry.getIdInvoice()}" class="ui-widget-content"><img
+									class="floats" src="Images/paid.png" alt="isPaid icon" /></img> <img
+									class="floats isPaid" ispaid="${entry.isPaid()}"
+									src="Images/paid.png" alt="isPaid icon" /><img
 									src="Images/invoice.png" alt="Invoice icon" height="30px" /> <br />
 									<label class="title">${entry.getIdInvoice()}</label> <br /> <label
 									class="title">Amount: </label> <label class="description">${entry.getAmount()}</label>
@@ -143,9 +151,8 @@
 							<c:forEach var="entry" items="${users}">
 								<option value="${entry.key}">${entry.value}</option>
 							</c:forEach>
-						</select> <br /> <br />
-						<input id="newPaycheck" class="prominent" type="submit"
-							value="Create Invoice">
+						</select> <br /> <br /> <input id="newPaycheck" class="prominent"
+							type="submit" value="Create Invoice">
 					</form>
 				</div>
 				<div class="spacer" style="clear: both;"></div>
@@ -162,11 +169,14 @@
 							class="selectable receivedPaychecks lists">
 							<c:forEach items="${receivedPaychecks}" var="entry">
 								<li id="${entry.getIdPaycheck()}" class="ui-widget-content"
-									type="paycheckReceived"><img src="Images/paycheck.png"
-									alt="Paycheck icon" height="30px" /> <br /> <label
-									class="title">${entry.getDescription()}</label> <br /> <label
-									class="title">Amount: </label> <label class="description">${entry.getAmount()}</label>
-								</li>
+									type="paycheckReceived"><img class="floats"
+									src="Images/paid.png" alt="isPaid icon" /></img> <img
+									class="floats isPaid" ispaid="${entry.isPaid()}"
+									src="Images/paid.png" alt="isPaid icon" /><img
+									src="Images/paycheck.png" alt="Paycheck icon" height="30px" />
+									<br /> <label class="title">${entry.getDescription()}</label>
+									<br /> <label class="title">Amount: </label> <label
+									class="description">${entry.getAmount()}</label></li>
 							</c:forEach>
 						</ul>
 					</form>
@@ -179,11 +189,14 @@
 						<ul id="sentListPaychecks" class="selectable lists">
 							<c:forEach items="${sentPaychecks}" var="entry">
 								<li id="${entry.getIdPaycheck()}" class="ui-widget-content"
-									type="paycheckSent"><img src="Images/paycheck.png"
-									alt="Paycheck icon" height="30px" /> <br /> <label
-									class="title">${entry.getDescription()}</label> <br /> <label
-									class="title">Amount: </label> <label class="description">${entry.getAmount()}</label>
-								</li>
+									type="paycheckSent"><img class="floats"
+									src="Images/paid.png" alt="isPaid icon" /></img> <img
+									class="floats isPaid" ispaid="${entry.isPaid()}"
+									src="Images/paid.png" alt="isPaid icon" /><img
+									src="Images/paycheck.png" alt="Paycheck icon" height="30px" />
+									<br /> <label class="title">${entry.getDescription()}</label>
+									<br /> <label class="title">Amount: </label> <label
+									class="description">${entry.getAmount()}</label></li>
 							</c:forEach>
 						</ul>
 					</form>
