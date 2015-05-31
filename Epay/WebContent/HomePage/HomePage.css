@@ -1,0 +1,81 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	font-family: sans-serif;
+}
+
+.viewState {
+	display: none;
+}
+
+.panel {
+	width: 30%;
+	padding: 10px;
+	display: inline-block;
+	float: left;
+}
+
+.content {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	clear: both;
+	height: auto;
+	border-bottom: thin solid black;
+}
+
+.head {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+#listDocuments li {
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.info {
+	display: inline-block;
+}
+
+#recieverInfo {
+	float: right;
+}
+
+.lists li {
+	display: block;
+	margin: 10px;
+}
+
+.lists {
+	list-style-type: none;
+}
+
+form {
+	width: 100%;
+}
+
+table {
+	width: 100%;
+}
+
+.err {
+	display: none;
+}
+
+table td:first-child {
+	width: 30%;
+}
+
+.prominent {
+	width: 90%;
+}
+
+label.title {
+	text-weight: bold;
+}
+
+label.description {
+	text-decoration: italic;
+	font-size: 0.7em;
+}
