@@ -80,9 +80,11 @@ public class Queries {
 		st.execute();
 		ResultSet rs = st.getResultSet();
 		rs.next();
+		long r = rs.getLong("newId");
 		conn.close();
-		return rs.getLong("newId");
+		return r;
 	}
+	
 
 	
 	/**

@@ -7,6 +7,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Empty Paycheck</title>
+<script type="text/javascript" src="jQuery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="jQuery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="Paycheck.js"></script>
 <style type="text/css">
 
 .body{
@@ -89,15 +92,21 @@ align:middle;
 		   <input type="hidden" id="createInvoice" name="createInvoice" value="${createInvoice}">
 		  <input type="hidden" id="createNew" name="createNew" value="${createNew}">
 		  <label style="${createdPaycheckVisible}">Your paycheck has been created</label>
-		  <input id="btnPay" type="submit" value="CREATE"  style="${buttonVisible}"/>  
+		  <label style="${PaidPaycheckVisible}">Your paycheck has been successfuly paid</label>
+		  <input id="btnCreate" type="submit" value="CREATE"  style="${buttonVisible}"/>  
+		   <input id="btnPay" type="submit" value="PAY"  style="${PayButtonVisible}"/> 
 		  <input type="hidden" name="invoiceId" value="${invoiceid}">
+		  <input type="hidden" name="payingMode" value="${payingMode}">
+		  <input type="hidden" name="paycheckSelectedPay" value="${paycheckSelectedPay}">
 		</div>
 		
 		</form>
 		<form action="${backDestination}" method=post>
 		    <input type="hidden" name="invoiceid" value="${invoiceid}">
-			<input type="submit" style="${OKbuttonVisible} value="OK">
+			<input type="submit" style="${OKbuttonVisible}" value="OK">
 		</form>
+		
+		
 	</div>
 </body>
 </html>

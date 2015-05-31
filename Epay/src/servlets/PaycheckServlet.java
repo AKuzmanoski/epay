@@ -72,6 +72,7 @@ public class PaycheckServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		System.out.println("Logged user "+user.getFullName());
 	    Paycheck paycheck=null;
 	    Invoice invoice=null;
 	    Account accountFrom=null;
@@ -82,11 +83,16 @@ public class PaycheckServlet extends HttpServlet {
 	    request.setAttribute("createNew", "false");
 	    request.setAttribute("createdPaycheckVisible", "visibility:hidden");
 	    request.setAttribute("OKbuttonVisible", "visibility:hidden");
+	    request.setAttribute("buttonVisible", "visibility:hidden");
+	    request.setAttribute("payingMode", "false");
+	    request.setAttribute("PayButtonVisible", "visibility:hidden");
+	    request.setAttribute("PaidPaycheckVisible", "visibility:hidden"); 
 	    
 	    if(request.getParameter("paycheckSelected")!=null){
 	    	System.out.println("Scenario 1");
 	    	//znaci doagja od lista na paycheck i treba da se prikaze popolnetata paycheck
 	    	System.out.println("paycheckSelected "+Long.parseLong(request.getParameter("paycheckSelected")));
+	    	request.setAttribute("paycheckSelectedPay", idString);
 	    	try {
 	    		paycheck=new Paycheck(Long.parseLong(idString));
 	    	} catch (Exception e) {
@@ -116,12 +122,6 @@ public class PaycheckServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-	    	try {
-				receiver=accountTo.accountOwner();
-			}  catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
 	    	
 	    	request.setAttribute("applicantName", applicant.getFullName());
 	    	request.setAttribute("applicantAddress", applicant.getAddress());
@@ -131,23 +131,48 @@ public class PaycheckServlet extends HttpServlet {
 	    	
 	    	request.setAttribute("description", paycheck.getDescription());
 	    	request.setAttribute("amount", paycheck.getAmount());
-	    	request.setAttribute("receiverName", receiver.getFullName());
+	    	request.setAttribute("receiverName", paycheck.getReceiverName());
 	    	request.setAttribute("receiverBank", accountTo.getBank());
 	    	request.setAttribute("receiverAccount", accountTo.getCardNumber());
-
-	    	request.setAttribute("buttonVisible", "visibility:hidden");
 	    	
+	    	if(!paycheck.isPaid() && applicant.getIdUser()!=user.getIdUser()){
+	    	request.setAttribute("payingMode", "true");
+	    	request.setAttribute("PayButtonVisible", "");	
+	    	}
+	    	else{
+	    	request.setAttribute("PayButtonVisible", "visibility:hidden");    	
+	    	}
 	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 			dispatcher.forward(request, response);
 	    	
-	    }else if(request.getParameter("accountFrom")!=null && request.getParameter("accountTo")!=null){
+	    }else if(request.getParameter("payingMode")!=null && request.getParameter("payingMode").equals("true")){
+	    	System.out.println("plakjanje");
+	    	request.setAttribute("PayButtonVisible", "visibility:hidden");  
+	    	request.setAttribute("PaidPaycheckVisible", ""); 
+	    	
+	    	long idP=Long.parseLong(request.getParameter("paycheckSelectedPay"));
+    	    try {
+				Paycheck paycheckToPay=new Paycheck(idP);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+    	    request.setAttribute("backDestination", "InvoiceServlet");
+    		request.setAttribute("OKbuttonVisible", "");
+    		long invoiceid=Long.parseLong(request.getParameter("invoiceid"));
+    		request.setAttribute("invoiceid", invoiceid);
+    	    RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
+		    dispatcher.forward(request, response);
+	    }
+	    else if(request.getParameter("accountFrom")!=null && request.getParameter("accountTo")!=null){
 	    	System.out.println("Scenario 2");
 	    	 request.setAttribute("OKbuttonVisible", "visibility:hidden");
 	    	// znaci doagja od invoice i treba da se kreira nova uplatnica i da se dodade vo baza i da se vrati na fakturata so dadeno id
 	    	//+da se dodade i invoice paycheck !!!
 	    	long accountFromId=Long.parseLong(request.getParameter("accountFrom").toString());
 	    	long accountToId=Long.parseLong(request.getParameter("accountTo").toString());
-	    	
+	    	request.setAttribute("backDestination", "Invoice/InvoiceServlet");
+	        
 	    	
 	    	try {
 				accountFrom=new Account(accountFromId);
@@ -172,11 +197,10 @@ public class PaycheckServlet extends HttpServlet {
 			} 
 	    	try {
 				receiver=accountTo.accountOwner();
-			}  catch (Exception e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-	    	
 	    	request.setAttribute("applicantName", applicant.getFullName());
 	    	request.setAttribute("applicantAddress", applicant.getAddress());
 	    	request.setAttribute("applicantBank", accountFrom.getBank());
@@ -184,7 +208,7 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("applicantEmbg", applicant.getEmbg());
 	    	
 	    
-	    	request.setAttribute("receiverName", receiver.getFullName());
+	    	request.setAttribute("receiverName",receiver.getFullName());
 	    	request.setAttribute("receiverBank", accountTo.getBank());
 	    	request.setAttribute("receiverAccount", accountTo.getCardNumber());
 
@@ -293,10 +317,12 @@ public class PaycheckServlet extends HttpServlet {
 				} 
 	    		request.setAttribute("createNew", "false");
 	    		request.setAttribute("backDestination", "InvoiceServlet");
+	    		request.setAttribute("OKbuttonVisible", "");
 	    		request.setAttribute("invoiceid", invoiceid);
 	    	}
 	    	request.setAttribute("createdPaycheckVisible", "");
-	    	
+	    	request.setAttribute("createNew", "false");
+	    	request.setAttribute("createInvoice", "false");
 	    	request.setAttribute("buttonVisible", "visibility:hidden");
 	    	RequestDispatcher dispatcher=request.getRequestDispatcher("Paycheck.jsp");
 			dispatcher.forward(request, response);
@@ -328,34 +354,7 @@ public class PaycheckServlet extends HttpServlet {
 	    String type=request.getParameter("typeOfItem");
 	    System.out.println("idpaycheck "+idString);
 	   
-		
-		
-		/*
-		try {
-			String applicantName = request.getParameter("applicantName");
-			String applicantAddress = request.getParameter("applicantAddress");
-			String applicantBank = request.getParameter("applicantBank");
-			String applicantAccount = request.getParameter("applicantAccount");
-			String applicantSS=request.getParameter("applicantSS");
-			String description=request.getParameter("description");
-			
-			String receiverName = request.getParameter("receiverName");
-			String receiverBank = request.getParameter("receiverBank");
-			String receiverAccount = request.getParameter("receiverAccount");
-			String amount=request.getParameter("amount");
-            
-			System.out.println(applicantName+" "+applicantAddress+" "+receiverName+" "+amount);
-
-//				HttpSession session = request.getSession(true);
-//				session.setAttribute("currentSessionUser", user);
-//				response.sendRedirect("userLogged.jsp"); // logged-in page
-
-		}
-
-		catch (Throwable theException) {
-			System.out.println(theException);
-		}
-		*/
+	
 	}
 
 }
