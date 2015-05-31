@@ -86,9 +86,10 @@ align:middle;
 			<label>PP50</label>
 		  </div>
 		  <br/>
+		   <input type="hidden" id="createInvoice" name="createInvoice" value="${createInvoice}">
 		  <input type="hidden" id="createNew" name="createNew" value="${createNew}">
 		  <label style="${createdPaycheckVisible}">Your paycheck has been created</label>
-		  <input id="btnPay" type="submit" value="PAY"  style="${buttonVisible}"/>  
+		  <input id="btnPay" type="submit" value="CREATE"  style="${buttonVisible}"/>  
 		</div>
 		
 		</form>
