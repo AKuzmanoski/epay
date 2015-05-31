@@ -67,7 +67,7 @@ public class LoginToHomeServlet extends HttpServlet {
 
 				
 			long userid= checkUserSign(request, response);
-					
+			System.out.println(userid);
 			User user=null;
 		   
 			try {
@@ -78,9 +78,9 @@ public class LoginToHomeServlet extends HttpServlet {
 			} 
 		    
 			System.out.println(user.getFullName());
-			Map<String, String> accounts=null;
+			List<Account> accounts=null;
 			try {
-				accounts = user.getAccountsCards();
+				accounts = user.getCompleteAccounts();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,8 +101,8 @@ public class LoginToHomeServlet extends HttpServlet {
 		    else{
 		        System.out.println("hello");
 		        String id="";
-		        for (String idd : accounts.keySet()) {
-					id=idd;
+		        for (Account idd : accounts) {
+					id=idd.getAccountId() + "";
 					break;
 				}
 		        System.out.println("id"+id);

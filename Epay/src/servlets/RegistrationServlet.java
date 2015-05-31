@@ -55,7 +55,8 @@ public class RegistrationServlet extends HttpServlet {
 
 		String userName = request.getParameter("username");
 		String accountNumber = request.getParameter("accountnumber");
-		String password = null;
+		String password = request.getParameter("password");
+		System.out.println("Registration pass: " + password);
 		try {
 			password = PasswordHash.createHash(request.getParameter("password"));
 		} catch (NoSuchAlgorithmException e1) {
@@ -65,6 +66,7 @@ public class RegistrationServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		System.out.println("Registration hash: " + password);
 		String isIndividual = request.getParameter("isIndividual");
 		String fullName = null;
 		String socialSecurity = null;
@@ -126,11 +128,9 @@ public class RegistrationServlet extends HttpServlet {
 					contactNumber, new java.sql.Date(dateOfBirth.getTime()),
 					address, isIndividual.equals("individual"), socialSecurity,
 					accountNumber, balance, limit, bank);
-			System.out.println("New user:");
-			System.out.println(password.length());
 			// LoginToHome
 			request.setAttribute("username", userName);
-			request.setAttribute("password", password);
+			request.setAttribute("password", request.getParameter("password"));
 			request.getRequestDispatcher("LoginServlet").forward(request,
 					response);
 		} catch (InstantiationException e) {

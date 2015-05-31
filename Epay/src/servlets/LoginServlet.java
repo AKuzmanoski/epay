@@ -33,13 +33,21 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-			String username = req.getParameter("username");
-			String pass = req.getParameter("pass");
-			
-
+			// Parametrite se prateni od registrationServlet. NE BRISI
+			Object usName = req.getAttribute("username");
+			Object password = req.getAttribute("password");
+			if (usName == null) {
+				// Parametrite se prateni od loginPage.js
+				usName = req.getParameter("username");
+				password = req.getParameter("password");
+			}
+			String username = usName.toString();
+			String pass = password.toString();
+			System.out.println("Login pass: " + pass);
+			pass = PasswordHash.createHash(pass);
+			System.out.println("Login hash: " + pass);
 			if(Queries.userAuthentication(username, pass)) {
 				System.out.println("Hello");
-				pass = PasswordHash.createHash(pass);
 				User user = new User(username, pass);
 				System.out.println("wow");
 				//succesfull  
@@ -63,7 +71,7 @@ public class LoginServlet extends HttpServlet {
 
 		catch (Throwable theException) {
 			System.out.println("NOOOOOOOOOO");
-			System.out.println(theException);
+			theException.printStackTrace();
 		}
 	}
 }
