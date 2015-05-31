@@ -45,6 +45,7 @@ public class Document {
 			url = resultSet.getString("url");
 			content_type = resultSet.getString("content_type");
 		}
+		conn.close();
 	}
 
 	public long getIdDocument() {

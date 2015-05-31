@@ -69,8 +69,8 @@ public class User extends Entity {
 			isIndividual = resultSet.getBoolean("isIndividual");
 			embg = resultSet.getString("embg");
 			
-//			money = resultSet.getDouble("money");
 		}
+		conn.close();
 	}
 	
 	
@@ -121,8 +121,8 @@ public class User extends Entity {
 			isIndividual = resultSet.getBoolean("isIndividual");
 			embg = resultSet.getString("embg");
 			
-//			money = resultSet.getDouble("money");
 		}
+		conn.close();
 	}
 	
 	/**
@@ -146,6 +146,7 @@ public class User extends Entity {
 		while(resultSet.next()) {
 			existence = resultSet.getInt("cnt");
 		}
+		conn.close();
 		return existence == 0;
 	}
 	
@@ -171,7 +172,7 @@ public class User extends Entity {
 		while(resultSet.next()) {
 			accounts.add(resultSet.getString("acc"));
 		}
-		
+		conn.close();
 		return accounts;
 	}
 	
@@ -197,7 +198,7 @@ public class User extends Entity {
 		while(resultSet.next()) {
 			accounts.put(resultSet.getString("acc"), resultSet.getString("card"));
 		}
-		
+		conn.close();
 		return accounts;
 	}
 	
@@ -226,7 +227,7 @@ public class User extends Entity {
 					, resultSet.getDate("datefrom"), resultSet.getDate("dateto"), 
 					resultSet.getDouble("balance"), resultSet.getDouble("limit"), resultSet.getString("bank")));
 		}
-		
+		conn.close();
 		return accounts;
 	}
 	
@@ -244,7 +245,7 @@ public class User extends Entity {
 			invoices.add(new Invoice(resultSet.getInt("idinvoice"), resultSet.getInt("sender"), 
 					resultSet.getInt("receiver")));
 		}
-		
+		conn.close();
 		return invoices;
 	}
 	
@@ -262,7 +263,7 @@ public class User extends Entity {
 			invoices.add(new Invoice(resultSet.getInt("idinvoice"), resultSet.getInt("sender"), 
 					resultSet.getInt("receiver")));
 		}
-		
+		conn.close();
 		return invoices;
 	}
 	
@@ -280,7 +281,7 @@ public class User extends Entity {
 			sent.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"), rs.getLong("accountTo"),
 					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName")));
 		}
-		
+		conn.close();
 		return sent;
 	}
 	
@@ -298,7 +299,7 @@ public class User extends Entity {
 			received.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"), rs.getLong("accountTo"),
 					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName")));
 		}
-		
+		conn.close();
 		return received;
 	}
 	

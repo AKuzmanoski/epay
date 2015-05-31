@@ -52,6 +52,7 @@ public class Paycheck extends Entity {
 			description = resultSet.getString("description");
 			receiverName = resultSet.getString("receiverName");
 		}
+		conn.close();
 	}
 	
 	@Override

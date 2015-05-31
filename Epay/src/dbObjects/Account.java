@@ -58,6 +58,7 @@ public class Account extends Entity {
 			limit = resultSet.getDouble("limit");
 			bank = resultSet.getString("bank");
 		}
+		conn.close();
 	}
 
 	public void setParams(String cardnumber) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
@@ -76,6 +77,7 @@ public class Account extends Entity {
 			limit = resultSet.getDouble("limit");
 			bank = resultSet.getString("bank");
 		}
+		conn.close();
 	}
 	
 	/**
@@ -102,7 +104,7 @@ public class Account extends Entity {
 					resultSet.getLong("accountTo"), resultSet.getDouble("amount"), 
 					resultSet.getString("description"), resultSet.getString("receiverName")));
 		}
-		
+		conn.close();
 		return paychecks;
 	}
 	
@@ -130,7 +132,7 @@ public class Account extends Entity {
 					resultSet.getLong("accountTo"), resultSet.getDouble("amount"), 
 					resultSet.getString("description"), resultSet.getString("receiverName")));
 		}
-		
+		conn.close();
 		return paychecks;
 	}
 	
@@ -159,6 +161,7 @@ public class Account extends Entity {
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		resultSet.next();
+		conn.close();
 		return resultSet.getInt("isSuccesful") == 1;
 	}
 	
@@ -170,10 +173,12 @@ public class Account extends Entity {
 		st.execute();
 		ResultSet rs = st.getResultSet();
 		rs.next();
-		return new User(rs.getLong("iduser"), rs.getString("username"), rs.getString("password"),
+		User u = new User(rs.getLong("iduser"), rs.getString("username"), rs.getString("password"),
 				rs.getString("fullname"), rs.getString("email"), rs.getString("contact"),
 				rs.getDate("dateOfBirth"), rs.getString("address"), rs.getBoolean("isindividual"), 
 				rs.getString("embg"));
+		conn.close();
+		return u;
 	}
 
 	@Override

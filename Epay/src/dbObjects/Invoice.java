@@ -50,6 +50,8 @@ public class Invoice extends Entity {
 					resultSet.getString("title"), resultSet.getString("description"), resultSet.getString("url"), resultSet.getString("content_type")));
 		}
 		
+		conn.close();
+		
 		return documents;
 	}
 	
@@ -65,6 +67,8 @@ public class Invoice extends Entity {
 			sender = resultSet.getLong("sender");
 			receiver = resultSet.getLong("receiver");
 		}
+		
+		conn.close();
 	}
 	
 	
@@ -84,7 +88,7 @@ public class Invoice extends Entity {
 					resultSet.getString("description"),
 					resultSet.getString("receiverName")));
 		}
-		
+		conn.close();
 		return documents;
 	}
 
