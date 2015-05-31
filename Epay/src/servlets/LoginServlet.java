@@ -38,8 +38,10 @@ public class LoginServlet extends HttpServlet {
 			
 
 			if(Queries.userAuthentication(username, pass)) {
+				System.out.println("Hello");
 				pass = PasswordHash.createHash(pass);
 				User user = new User(username, pass);
+				System.out.println("wow");
 				//succesfull  
 				System.out.println("Hello");
 				System.out.println(user);
@@ -60,6 +62,7 @@ public class LoginServlet extends HttpServlet {
 		}
 
 		catch (Throwable theException) {
+			System.out.println("NOOOOOOOOOO");
 			System.out.println(theException);
 		}
 	}
