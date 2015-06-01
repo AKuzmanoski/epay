@@ -55,8 +55,7 @@ public class LoginToHomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		throw new ServletException("GET method used with "
-				+ getClass().getName() + ": POST method required.");
+		doPost(request, response);
 	}
 
 	/**
