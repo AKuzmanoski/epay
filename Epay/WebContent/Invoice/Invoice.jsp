@@ -50,37 +50,26 @@
 				<input type="hidden" id="document" name="document" value="${invoiceid}" /> 
 				<input type="hidden" id="operation" name="operation" />
 				
-				<input type="hidden" id="senderR" name="senderR" />
-				<input type="hidden" id="senderR" name="senderW" />
-				<input type="hidden" id="senderR" name="senderX" />
-				
-				<input type="hidden" id="senderR" name="receiverR" />
-				<input type="hidden" id="senderR" name="receiverW" />
-				<input type="hidden" id="senderR" name="receiverX" />
+				<input type="hidden" id="recieverR" name="receiverR" />
+				<input type="hidden" id="recieverR" name="receiverW" />
+				<input type="hidden" id="recieverR" name="receiverX" />
 				<ul id="listDocuments" class="lists">
 					<c:forEach items="${documents}" var="entry">
-						<li id="${entry.getIdDocument()}" class="ui-widget-content"
+						<li id="${entry.getDocument().getIdDocument()}" class="ui-widget-content"
 							type="paycheckSent">
-							<div style="float: right;">
+							<div class="permisions" style="float: right;">
 								<div style="text-align: right;">
-									${senderName}:
-									r <input type="checkbox" class="senderR" class="sender" />
-									w <input type="checkbox" class="senderW" class="sender" />
-									x <input type="checkbox" class="senderX" class="sender" />
-									<br />
-									${recieverName}:
-									r <input type="checkbox" class="receiverR" />
-									w <input type="checkbox" class="receiverW" />
-									x <input type="checkbox" class="receiverX" />
-									<br />
-									<input style="float: right;" type="submit" class="update" value="Update" />
+									r <input has="${entry.isR2()}" type="checkbox" class="permission permissionR" />
+									w <input has="${entry.isW2()}" type="checkbox" class="permission permissionW" />
+									x <input has="${entry.isX2()}" type="checkbox" class="permission permissionX" /> <br />
+									<input style="float: right;" type="submit" class="update" value="Update" class="update control" />
 								</div>
 							</div>
 							<img src="Images/document.png"
-							alt="Document icon" height="30px" /> <label class="title">${entry.getTitle()}</label>
-							<br /> <label class="description">${entry.getDescription()}</label>
-							<br /> <input type="submit" class="download" value="Download" />
-							<input type="submit" class="delete" value="Delete" />
+							alt="Document icon" height="30px" /> <label class="title">${entry.getDocument().getTitle()}</label>
+							<br /> <label class="description">${entry.getDocument().getDescription()}</label>
+							<br /> <input has="${entry.isR1()}" type="submit" class="download control" value="Download" />
+							<input has="${entry.isW1()}" type="submit" class="delete control" value="Delete" />
 						</li>
 					</c:forEach>
 				</ul>

@@ -2,7 +2,23 @@
  * 
  */
 $(document).ready(function() { 
+	if ($("#isOwner").val() == "false") {
+		$(".permisions").css("display", "none");
+	}
 	
+	$(".control").each(function (index) {
+		if ($(this).attr("has") == "false") {
+			$(this).attr("disabled", "disabled")
+		}
+	});
+	
+	$(".permission").each(function (index) {
+		if ($(this).attr("has") == "false") {
+			$(this).attr("checked", false);
+		} else {
+			$(this).attr("checked", true);
+		}
+	});
 	
 	$(".selectable li").button();
 	

@@ -18,6 +18,7 @@ import org.apache.commons.io.output.*;
 import Classes.IsLoggedIn;
 import dbObjects.Account;
 import dbObjects.Document;
+import dbObjects.DocumentPermisions;
 import dbObjects.Invoice;
 import dbObjects.Paycheck;
 import dbObjects.Queries;
@@ -70,7 +71,7 @@ public class InvoiceServlet extends HttpServlet {
 
 		// Check that we have a file upload request
 		if (isMultipart) {
-			uploadFile(request, invoice.getIdInvoice());
+			uploadFile(request, invoice);
 		} else if (request.getParameter("document") != null) {
 			if (request.getParameter("operation").equals("download")) {
 				downloadFile(Long.parseLong(request.getParameter("document")),
@@ -91,15 +92,19 @@ public class InvoiceServlet extends HttpServlet {
 		try {
 			List<Paycheck> paychecks = invoice.getPaychecks();
 			request.setAttribute("invoiceid", invoice.getIdInvoice());
-			request.setAttribute("documents", invoice.getDocuments());
 			request.setAttribute("paychecks", paychecks);
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
+			long otherid = -1;
 			if (userid == sender.getIdUser()) {
 				request.setAttribute("isOwner", "true");
+				otherid = reciever.getIdUser();
 			} else {
 				request.setAttribute("isOwner", "false");
+				otherid = sender.getIdUser();
 			}
+			List<DocumentPermisions> documents = Queries.getDocumentPermisions(invoice.getIdInvoice(), userid, otherid);
+			request.setAttribute("documents", documents);
 			request.setAttribute("senderAccounts", sender.getCompleteAccounts());
 			request.setAttribute("recieverAccounts",
 					reciever.getCompleteAccounts());
@@ -224,7 +229,7 @@ public class InvoiceServlet extends HttpServlet {
 	 * 
 	 * @param request
 	 */
-	private void uploadFile(HttpServletRequest request, long invoice) {
+	private void uploadFile(HttpServletRequest request, Invoice invoice) {
 		// Check that we have a file upload request
 		String folderPath = filePath + invoice + "/";
 		folder = new File(folderPath);
@@ -253,8 +258,10 @@ public class InvoiceServlet extends HttpServlet {
 
 		Long fileId = null;
 		try {
-			fileId = Queries.insertNewDocument(invoice, fileName,
+			fileId = Queries.insertNewDocument(invoice.getIdInvoice(), fileName,
 					fileDescription, folderPath + extension, contentType);
+			Queries.insertNewUserDocumentPermissions(invoice.getSender(), fileId, true, true, true);
+			Queries.insertNewUserDocumentPermissions(invoice.getReceiver(), fileId, true, false, false);
 		} catch (InstantiationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

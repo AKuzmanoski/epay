@@ -525,6 +525,29 @@ public class Queries {
 		conn.close();
 		return paychecks;
 	}
+	
+	public static List<DocumentPermisions> getDocumentPermisions(long invoice, long user1, long user2) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<DocumentPermisions> docs = new ArrayList<DocumentPermisions>();
+		
+		Connection conn = Holder.getConnection();
+		String sql = "{call getPermisions(?, ?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("invoice", invoice);
+		st.setLong("user1", user1);
+		st.setLong("user2", user2);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		Document document = null;
+		DocumentPermisions documentPermisions = null;
+		while(rs.next()) {
+			document = new Document(rs.getLong("documentId"), rs.getLong("invoice"), rs.getString("title"), rs.getString("description"), rs.getString("url"), rs.getString("content_type"));
+			documentPermisions = new DocumentPermisions(document, rs.getBoolean("u1r"), rs.getBoolean("u1w"), rs.getBoolean("u1x"), rs.getBoolean("u2r"), rs.getBoolean("u2w"), rs.getBoolean("u2x"));
+			docs.add(documentPermisions);
+		}
+		conn.close();
+		return docs;
+	}
+	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 //		updatePermissionsByUserDoc(1, 3, false, true, true);
 //		System.out.println(new UserDocumentPermissions(1, 3));
