@@ -343,15 +343,16 @@ public class Queries {
 	}
 	
 	public static long insertNewPaycheck(long accountFrom, long accountTo,
-			double amount, String description, String receiverName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+			double amount, String description, String receiverName, boolean isPaid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 		Connection conn = Holder.getConnection();
-		String sql = "{call insertNewPaycheck(?, ?, ?, ?, ?)}";
+		String sql = "{call insertNewPaycheck(?, ?, ?, ?, ?, ?)}";
 		CallableStatement st = conn.prepareCall(sql);
 		st.setLong("accFrom", accountFrom);
 		st.setLong("accTo", accountTo);
 		st.setDouble("amount", amount);
 		st.setString("description", description);
 		st.setString("receiverName", receiverName);
+		st.setBoolean("isPaid", isPaid);
 		st.execute();
 		
 		ResultSet rs = st.getResultSet();
@@ -450,7 +451,10 @@ public class Queries {
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 //		updatePermissionsByUserDoc(1, 3, false, true, true);
 //		System.out.println(new UserDocumentPermissions(1, 3));
-		System.out.println(insertNewUserAccount(1, 8, new Date(0)));
+//		System.out.println(insertNewUserAccount(1, 8, new Date(0)));
+//		Paycheck p = new Paycheck(10);
+//		System.out.println(p);
+		System.out.println(isAccountNotInOwnership("348"));
 	}
 }
 
