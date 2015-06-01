@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
+import Classes.IsLoggedIn;
 import dbObjects.Account;
 import dbObjects.Document;
 import dbObjects.Invoice;
@@ -51,9 +52,15 @@ public class InvoiceServlet extends HttpServlet {
 		filePath = env.get("CATALINA_HOME") + "/webapps/data/";
 		repoPath = env.get("CATALINA_HOME") + "/webapps/repository/";
 	}
+	
+	
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, java.io.IOException {
+		long userid = IsLoggedIn.getUserId(request, response);
+		if (userid == -1)
+			return;
+		
 		isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (isMultipart) {
 			initFileItems(request);

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Classes.IsLoggedIn;
 import security.PasswordHash;
 //import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import dbObjects.Account;
@@ -54,7 +55,8 @@ public class LoginToHomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doPost(request, response);
+		throw new ServletException("GET method used with "
+				+ getClass().getName() + ": POST method required.");
 	}
 
 	/**
@@ -65,7 +67,9 @@ public class LoginToHomeServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 
-		long userid = checkUserSign(request, response);
+		long userid = IsLoggedIn.getUserId(request, response);
+		if (userid == -1)
+			return;
 		User user = null;
 
 		try {
