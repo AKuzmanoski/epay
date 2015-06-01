@@ -122,7 +122,7 @@
 						<input id="receivedIdInvoice" class="viewState" type="hidden"
 							name="invoiceid" />
 						<ul id="receivedListInvoices" class="selectable lists">
-							<c:forEach items="${sentInvoices}" var="entry">
+							<c:forEach items="${receivedInvoices}" var="entry">
 								<li id="${entry.getIdInvoice()}" class="ui-widget-content"><img
 									class="floats" src="Images/paid.png" alt="isPaid icon" /></img> <img
 									class="floats isPaid" ispaid="${entry.isPaid()}"
@@ -141,7 +141,7 @@
 						<input id="sentIdInvoice" class="viewState" type="hidden"
 							name="invoiceid" />
 						<ul id="sentListInvoices" class="selectable lists">
-							<c:forEach items="${receivedInvoices}" var="entry">
+							<c:forEach items="${sentInvoices}" var="entry">
 								<li id="${entry.getIdInvoice()}" class="ui-widget-content"><img
 									class="floats" src="Images/paid.png" alt="isPaid icon" /></img> <img
 									class="floats isPaid" ispaid="${entry.isPaid()}"

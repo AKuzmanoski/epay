@@ -2,6 +2,8 @@
  * 
  */
 $(document).ready(function() { 
+	
+	
 	$(".selectable li").button();
 	
 	$(".selectable li").click(function () {

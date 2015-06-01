@@ -31,6 +31,7 @@
 		</div>
 	</div>
 	<div id="invoiceHeader">
+		<input type="hidden" id="isOwner" value="${isOwner}" />
 		<div id="senderInfo" class="info">
 			Issuer: <b>${senderName}</b><br /> Address: <b>${senderAddress}</b><br />
 			Address: <b>${senderContact}</b><br /> Address: <b>${senderEmail}</b>
@@ -45,18 +46,42 @@
 			<h3>Documents:</h3>
 			<form id="documentListForm" action="InvoiceServlet" method="post"
 				target="_blank">
-				<input type="text" class="viewState" name="invoiceid"
-					value="${invoiceid}" /> <input type="text" class="viewState"
-					id="document" name="document" value="${invoiceid}" /> <input
-					type="text" class="viewState" id="operation" name="operation" />
+				<input type="hidden" name="invoiceid" value="${invoiceid}" /> 
+				<input type="hidden" id="document" name="document" value="${invoiceid}" /> 
+				<input type="hidden" id="operation" name="operation" />
+				
+				<input type="hidden" id="senderR" name="senderR" />
+				<input type="hidden" id="senderR" name="senderW" />
+				<input type="hidden" id="senderR" name="senderX" />
+				
+				<input type="hidden" id="senderR" name="receiverR" />
+				<input type="hidden" id="senderR" name="receiverW" />
+				<input type="hidden" id="senderR" name="receiverX" />
 				<ul id="listDocuments" class="lists">
 					<c:forEach items="${documents}" var="entry">
 						<li id="${entry.getIdDocument()}" class="ui-widget-content"
-							type="paycheckSent"><img src="Images/document.png"
+							type="paycheckSent">
+							<div style="float: right;">
+								<div style="text-align: right;">
+									${senderName}:
+									r <input type="checkbox" class="senderR" class="sender" />
+									w <input type="checkbox" class="senderW" class="sender" />
+									x <input type="checkbox" class="senderX" class="sender" />
+									<br />
+									${recieverName}:
+									r <input type="checkbox" class="receiverR" />
+									w <input type="checkbox" class="receiverW" />
+									x <input type="checkbox" class="receiverX" />
+									<br />
+									<input style="float: right;" type="submit" class="update" value="Update" />
+								</div>
+							</div>
+							<img src="Images/document.png"
 							alt="Document icon" height="30px" /> <label class="title">${entry.getTitle()}</label>
 							<br /> <label class="description">${entry.getDescription()}</label>
 							<br /> <input type="submit" class="download" value="Download" />
-							<input type="submit" class="delete" value="Delete" /></li>
+							<input type="submit" class="delete" value="Delete" />
+						</li>
 					</c:forEach>
 				</ul>
 			</form>
@@ -119,7 +144,7 @@
 					<tr>
 						<td>${senderName}\'saccount</td>
 						<td><select class="prominent" id="senderAccounts"
-							name="accountFrom">
+							name="accountTo">
 								<c:forEach var="entry" items="${senderAccounts}">
 									<option value="${entry.getAccountId()}">${entry.getCardNumber()}
 										(${entry.getBank()})</option>
@@ -129,7 +154,7 @@
 					<tr>
 						<td>${recieverName}\'saccount</td>
 						<td><select class="prominent" id="recieverAccounts"
-							name="accountTo">
+							name="accountFrom">
 								<c:forEach var="entry" items="${recieverAccounts}">
 									<option value="${entry.getAccountId()}">${entry.getCardNumber()}
 										(${entry.getBank()})</option>

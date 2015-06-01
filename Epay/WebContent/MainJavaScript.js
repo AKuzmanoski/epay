@@ -3,7 +3,7 @@
  */
 
 $(document).ready(function() { 
-	if($(".isPaid").attr("isPaid") == "true") {
+	if($(".isPaid").attr("ispaid")=="true") {
 		$(".isPaid").css("visibility", "visible");
 	}
 	

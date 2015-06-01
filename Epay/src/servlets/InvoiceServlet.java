@@ -82,12 +82,12 @@ public class InvoiceServlet extends HttpServlet {
 		}
 
 		// Generate new page
-		setAttributes(request, invoice);
+		setAttributes(userid, request, invoice);
 		request.getRequestDispatcher("Invoice/Invoice.jsp").forward(request,
 				response);
 	}
 
-	private void setAttributes(HttpServletRequest request, Invoice invoice) {
+	private void setAttributes(long userid, HttpServletRequest request, Invoice invoice) {
 		try {
 			List<Paycheck> paychecks = invoice.getPaychecks();
 			request.setAttribute("invoiceid", invoice.getIdInvoice());
@@ -95,6 +95,11 @@ public class InvoiceServlet extends HttpServlet {
 			request.setAttribute("paychecks", paychecks);
 			User sender = new User(invoice.getSender());
 			User reciever = new User(invoice.getReceiver());
+			if (userid == sender.getIdUser()) {
+				request.setAttribute("isOwner", "true");
+			} else {
+				request.setAttribute("isOwner", "false");
+			}
 			request.setAttribute("senderAccounts", sender.getCompleteAccounts());
 			request.setAttribute("recieverAccounts",
 					reciever.getCompleteAccounts());
@@ -109,8 +114,6 @@ public class InvoiceServlet extends HttpServlet {
 			request.setAttribute("senderEmail", sender.getEmail());
 			request.setAttribute("recieverAddress", reciever.getAddress());
 			
-			request.getSession().setAttribute("user", sender.getIdUser());
-
 			float total = 0F;
 			for (Paycheck pc : paychecks) {
 				total += pc.getAmount();
