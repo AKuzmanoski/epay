@@ -112,6 +112,7 @@ public class PaycheckServlet extends HttpServlet {
 	    request.setAttribute("payingMode", "false");
 	    request.setAttribute("PayButtonVisible", "visibility:hidden");
 	    request.setAttribute("PaidPaycheckVisible", "visibility:hidden"); 
+	    request.setAttribute("noMoney", "visibility:hidden"); 
 	    
 	    if(request.getParameter("paycheckSelected")!=null){
 	    	System.out.println("Scenario 1");
@@ -160,7 +161,10 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("receiverBank", accountTo.getBank());
 	    	request.setAttribute("receiverAccount", accountTo.getCardNumber());
 	    	
-	    	if(!paycheck.isPaid() && applicant.getIdUser()!=user.getIdUser()){
+	    	//ako ne e platena i ako doagja od invoice i ako e za mene (ne sum ja pratila jas) treba da ja platam
+	    	System.out.println("linija 165 ");
+	    	System.out.println("platena "+paycheck.isPaid()+" true="+(applicant.getIdUser()!=user.getIdUser())+" invoiceid="+request.getParameter("invoiceid") );
+	    	if(!paycheck.isPaid() && applicant.getIdUser()!=user.getIdUser() && request.getParameter("invoiceid")!=null){
 	    	request.setAttribute("payingMode", "true");
 	    	request.setAttribute("PayButtonVisible", "");	
 	    	}
@@ -183,6 +187,7 @@ public class PaycheckServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
+			System.out.println("account "+account.getAccountId()+" paycheck "+idP);
 			boolean isSuccessfull=false;
     	    try {
 				isSuccessfull=account.tryToPay(idP);
@@ -193,6 +198,8 @@ public class PaycheckServlet extends HttpServlet {
 			} 
     	    if(isSuccessfull){
     	    	request.setAttribute("PaidPaycheckVisible", ""); 
+    	    }else{
+    	    	request.setAttribute("noMoney", ""); 
     	    }
     	    
     	    String applicantName = request.getParameter("applicantName");
@@ -241,6 +248,7 @@ public class PaycheckServlet extends HttpServlet {
 	    	 request.setAttribute("OKbuttonVisible", "visibility:hidden");
 	    	// znaci doagja od invoice i treba da se kreira nova uplatnica i da se dodade vo baza i da se vrati na fakturata so dadeno id
 	    	//+da se dodade i invoice paycheck !!!
+	    	 // OVDE NE SE PLAKJA!!!!!!
 	    	long accountFromId=Long.parseLong(request.getParameter("accountFrom").toString());
 	    	long accountToId=Long.parseLong(request.getParameter("accountTo").toString());
 	    	request.setAttribute("backDestination", "Invoice/InvoiceServlet");
@@ -366,13 +374,32 @@ public class PaycheckServlet extends HttpServlet {
 	    	request.setAttribute("receiverBank", receiverBank);
 	    	request.setAttribute("receiverAccount", receiverAccount);
 	    	
+	    	//ako ne e invoice, obicna uplatnica, jas ja kreiram, jas ja plakjam
+	    	System.out.println("389 ajde "+ (request.getParameter("createNew").toString()));
 	    	if((request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true"))){
+	    		System.out.println("kreiram uplatnica bez invoice");
+	    		try {
+					appAccount.tryToPay(newPaycheckId);
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	    		request.setAttribute("createInvoice", "false");
 	    		request.setAttribute("backDestination", "LoginToHomeServlet");
 	    		request.setAttribute("OKbuttonVisible", "");
 	    	
 	    	}else{
 	    		//ako e invoice
+	    		System.out.println("kreiram uplatnice so invoice");
 	    		long invoiceid=Long.parseLong(request.getParameter("invoiceId").toString());
 	    		Paycheck created=null;
 	    		try {

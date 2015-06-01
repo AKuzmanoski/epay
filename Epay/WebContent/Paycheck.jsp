@@ -31,7 +31,7 @@ label {
 	float: left;
 }
 
-input {
+input[type=text]{
 	width: 270px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -54,9 +54,13 @@ p, h3 {
 	margin-right: 10px;
 }
 
-#btnPay {
+#btnPay{
 	width: 70px;
 	margin: 50px;
+	align: middle;
+}
+.message{
+	margin: 30px;
 	align: middle;
 }
 </style>
@@ -105,10 +109,11 @@ p, h3 {
 				</div>
 				<br /> <input type="hidden" id="createInvoice" name="createInvoice"
 					value="${createInvoice}"> <input type="hidden"
-					id="createNew" name="createNew" value="${createNew}"> <label
-					style="${createdPaycheckVisible}">Your paycheck has been
-					created</label> <label style="${PaidPaycheckVisible}">Your paycheck
-					has been successfuly paid</label> <input id="btnCreate" type="submit"
+					id="createNew" name="createNew" value="${createNew}"> 
+					<label class="message" style="${createdPaycheckVisible}">Your paycheck has been created</label> 
+					<label class="message" style="${PaidPaycheckVisible}">Your paycheck has been successfuly paid</label> 
+					<label class="message" style="${noMoney}">Not enough money to pay this paycheck!</label>
+					<input id="btnCreate" type="submit"
 					value="CREATE" style="${buttonVisible}" /> <input id="btnPay"
 					type="submit" value="PAY" style="${PayButtonVisible}" /> <input
 					type="hidden" name="invoiceId" value="${invoiceid}"> <input
