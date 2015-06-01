@@ -278,7 +278,7 @@ public class User extends Entity {
 		
 		while(rs.next()) {
 			sent.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"), rs.getLong("accountTo"),
-					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName")));
+					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName"), rs.getBoolean("isPaid")));
 		}
 		conn.close();
 		return sent;
@@ -296,7 +296,7 @@ public class User extends Entity {
 		
 		while(rs.next()) {
 			received.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"), rs.getLong("accountTo"),
-					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName")));
+					rs.getDouble("amount"), rs.getString("description"), rs.getString("receiverName"), rs.getBoolean("isPaid")));
 		}
 		conn.close();
 		return received;
