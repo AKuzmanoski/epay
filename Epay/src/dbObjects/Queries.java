@@ -448,13 +448,118 @@ public class Queries {
 		return newId;
 	}
 	
+	public static List<Paycheck> getReceivedPaychecksByAccountAndInvoice(long accTo, long invId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
+		
+		Connection conn = Holder.getConnection();
+		String sql = "{call getReceivedPaychecksByInvoice(?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accTo", accTo);
+		st.setLong("invId", invId);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		
+		while(rs.next()) {
+			paychecks.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"),
+						rs.getLong("accountTo"), rs.getDouble("amount"), rs.getString("description"),
+						rs.getString("receiverName"), rs.getBoolean("isPaid")));
+		}
+		conn.close();
+		return paychecks;
+	}
+	
+	public static List<Paycheck> getSentPaychecksByAcccountAndInvoice(long accFrom, long invId) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
+		
+		Connection conn = Holder.getConnection();
+		String sql = "{call getSentPaychecksByInvoice(?, ?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accFrom", accFrom);
+		st.setLong("invId", invId);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		
+		while(rs.next()) {
+			paychecks.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"),
+						rs.getLong("accountTo"), rs.getDouble("amount"), rs.getString("description"),
+						rs.getString("receiverName"), rs.getBoolean("isPaid")));
+		}
+		conn.close();
+		return paychecks;
+	}
+	
+	public static List<Paycheck> getReceivedPaychecksByAccount(long accTo) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
+		
+		Connection conn = Holder.getConnection();
+		String sql = "{call getReceivedPaychecksByAccount(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accTo", accTo);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		
+		while(rs.next()) {
+			paychecks.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"),
+						rs.getLong("accountTo"), rs.getDouble("amount"), rs.getString("description"),
+						rs.getString("receiverName"), rs.getBoolean("isPaid")));
+		}
+		conn.close();
+		return paychecks;
+	}
+	
+	public static List<Paycheck> getSentPaychecksByAccount(long accFrom) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
+		
+		Connection conn = Holder.getConnection();
+		String sql = "{call getSentPaychecksByAccount(?)}";
+		CallableStatement st = conn.prepareCall(sql);
+		st.setLong("accFrom", accFrom);
+		st.execute();
+		ResultSet rs = st.getResultSet();
+		
+		while(rs.next()) {
+			paychecks.add(new Paycheck(rs.getLong("idpaycheck"), rs.getLong("accountFrom"),
+						rs.getLong("accountTo"), rs.getDouble("amount"), rs.getString("description"),
+						rs.getString("receiverName"), rs.getBoolean("isPaid")));
+		}
+		conn.close();
+		return paychecks;
+	}
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, IOException {
 //		updatePermissionsByUserDoc(1, 3, false, true, true);
 //		System.out.println(new UserDocumentPermissions(1, 3));
 //		System.out.println(insertNewUserAccount(1, 8, new Date(0)));
 //		Paycheck p = new Paycheck(10);
 //		System.out.println(p);
-		System.out.println(isAccountNotInOwnership("348"));
+//		System.out.println(isAccountNotInOwnership("348"));
+		List<Paycheck> l1 = getReceivedPaychecksByAccount(1001), 
+					   l2 = getReceivedPaychecksByAccountAndInvoice(1001, 9), 
+					   l3 = getSentPaychecksByAccount(1001),
+					   l4 = getSentPaychecksByAcccountAndInvoice(1001, 9);
+		System.out.println(l1.size());
+		System.out.println(l2.size());
+		System.out.println(l3.size());
+		System.out.println(l4.size());
+		for(Paycheck p : l1) {
+			System.out.println(p);
+		}
+		System.out.println("==================");
+		
+		for(Paycheck p : l2) {
+			System.out.println(p);
+		}
+		System.out.println("==================");
+		
+		for(Paycheck p : l3) {
+			System.out.println(p);
+		}
+		System.out.println("==================");
+		
+		
+		for(Paycheck p : l4) {
+			System.out.println(p);
+		}
+		System.out.println("==================");
 	}
 }
 
