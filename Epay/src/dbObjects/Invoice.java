@@ -80,16 +80,13 @@ public class Invoice extends Entity {
 		st.execute();
 		ResultSet resultSet = st.getResultSet();
 		
-		List<Paycheck> documents = new ArrayList<Paycheck>();
+		List<Paycheck> paychecks = new ArrayList<Paycheck>();
 		
 		while(resultSet.next()) {
-			documents.add(new Paycheck(resultSet.getInt("idpaycheck"), resultSet.getInt("accountFrom"), 
-					resultSet.getInt("accountTo"), resultSet.getDouble("amount"), 
-					resultSet.getString("description"),
-					resultSet.getString("receiverName")));
+			paychecks.add(new Paycheck(resultSet.getLong("idpaycheck")));
 		}
 		conn.close();
-		return documents;
+		return paychecks;
 	}
 
 	public long getIdInvoice() {
@@ -151,7 +148,7 @@ public class Invoice extends Entity {
 				isPaid = paycheck.isPaid() && isPaid;
 			}
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block￼
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
