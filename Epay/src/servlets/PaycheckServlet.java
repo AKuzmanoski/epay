@@ -354,13 +354,7 @@ public class PaycheckServlet extends HttpServlet {
 			System.out.println(appAccount.getAccountId());
 			System.out.println(recAccount.getAccountId());
 			long newPaycheckId=-1;
-			try {
-				newPaycheckId=Queries.insertNewPaycheck(appAccount.getAccountId(), recAccount.getAccountId(), Double.parseDouble(amount), description, receiverName);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("Neuspesno dodavanje na nova uplatnica");
-			}
+			
 	    	//na kraj
 			request.setAttribute("applicantName", applicantName);
 	    	request.setAttribute("applicantAddress", applicantAddress);
@@ -377,9 +371,10 @@ public class PaycheckServlet extends HttpServlet {
 	    	//ako ne e invoice, obicna uplatnica, jas ja kreiram, jas ja plakjam
 	    	System.out.println("389 ajde "+ (request.getParameter("createNew").toString()));
 	    	if((request.getParameter("createNew")!=null && request.getParameter("createNew").equals("true"))){
-	    		System.out.println("kreiram uplatnica bez invoice");
+	    		System.out.println("plakjam uplatnica bez invoice");
+	    		boolean isSuccessfull=false;
 	    		try {
-					appAccount.tryToPay(newPaycheckId);
+					isSuccessfull=appAccount.tryToPay(newPaycheckId);
 				} catch (InstantiationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -393,8 +388,25 @@ public class PaycheckServlet extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+	    		if(isSuccessfull){
+	    			System.out.println("isSuccessful");
+	    			  request.setAttribute("PaidPaycheckVisible", ""); 
+		    		    request.setAttribute("noMoney", "visibility:hidden"); 
+		    		    try {
+		    				newPaycheckId=Queries.insertNewPaycheck(appAccount.getAccountId(), recAccount.getAccountId(), Double.parseDouble(amount), description, receiverName,true);
+		    			} catch (Exception e) {
+		    				// TODO Auto-generated catch block
+		    				e.printStackTrace();
+		    				System.out.println("Neuspesno dodavanje na nova uplatnica");
+		    			}
+	    		}else{
+	    			System.out.println("isNOTSuccessful");
+	    			request.setAttribute("PaidPaycheckVisible", "visibility:hidden"); 
+		    		request.setAttribute("noMoney", ""); 
+	    		}
 	    		request.setAttribute("createInvoice", "false");
 	    		request.setAttribute("backDestination", "LoginToHomeServlet");
+	    		 
 	    		request.setAttribute("OKbuttonVisible", "");
 	    	
 	    	}else{
@@ -402,12 +414,20 @@ public class PaycheckServlet extends HttpServlet {
 	    		System.out.println("kreiram uplatnice so invoice");
 	    		long invoiceid=Long.parseLong(request.getParameter("invoiceId").toString());
 	    		Paycheck created=null;
+	    		 try {
+	    				newPaycheckId=Queries.insertNewPaycheck(appAccount.getAccountId(), recAccount.getAccountId(), Double.parseDouble(amount), description, receiverName,false);
+	    			} catch (Exception e) {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    				System.out.println("Neuspesno dodavanje na nova uplatnica");
+	    			}
 	    		try {
 					created=new Paycheck(newPaycheckId);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
+	    		
 	    		created.setPaid(false);
 	    		System.out.println("najnovo - invoice - paycheck "+invoiceid+" "+newPaycheckId);
 	    		try {
@@ -421,8 +441,9 @@ public class PaycheckServlet extends HttpServlet {
 	    		request.setAttribute("backDestination", "InvoiceServlet");
 	    		request.setAttribute("OKbuttonVisible", "");
 	    		request.setAttribute("invoiceid", invoiceid);
+	    		request.setAttribute("createdPaycheckVisible", "");
 	    	}
-	    	request.setAttribute("createdPaycheckVisible", "");
+	    	
 	    	request.setAttribute("createNew", "false");
 	    	request.setAttribute("createInvoice", "false");
 	    	request.setAttribute("buttonVisible", "visibility:hidden");
